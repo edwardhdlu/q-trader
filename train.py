@@ -11,7 +11,7 @@ import random
 
 class Trader:
 	def __init__(self):
-		self.state_size = 3 # current price, amount of stocks owned, balance
+		self.state_size = 7 # normalized previous week
 		self.action_size = 3 # sit, buy, sell
 		self.memory = deque(maxlen=1000)
 
@@ -55,29 +55,44 @@ class Trader:
 
 
 
+# returns the vector containing stock data from a fixed file
 def stockDataVec():
 	vec = []
 
-	lines = open("data/^GSPC.csv", "r").read().splitlines()
+	lines = open("data/^GSPC_2015.csv", "r").read().splitlines()
 	for line in lines[1:]:
 		vec.append(float(line.split(",")[4]))
 
 	return vec
 
+# prints the formatted values
 def printFormatted(price, owned, balance):
 	print "$" + "{:20,.2f}".format(price) + " | $" + "{:20,.2f}".format(balance) + " | " + str(int(owned))
+
+# returns an np array containing n stock values from time t - n + 1 to t
+def normalizeVec(data, t, n):
+	d = t - n + 1
+	res = data[d:t + 1] if d >= 0 else -d * [data[0]] + data[0:t + 1] # pad with t0
+	m = max(res)
+	return np.array([map(lambda x: 1.0 * x / m, res)])
 
 
 
 EPISODES = 1000
-BALANCE = 100000
+WINDOW_SIZE = 7 # one week
+
+owned_quantity = 0
+amount_spent = 0
+amount_earned = 0
+
+# BALANCE = 100000
 
 agent = Trader()
 data = stockDataVec()
 
 for e in xrange(EPISODES):
 	print "Episode " + str(e) + "/" + str(EPISODES)
-	state = np.array([[data[0], 0, BALANCE]])
+	state = normalizeVec(data, 0, WINDOW_SIZE) # normalized extended
 
 	l = len(data) - 1
 	for t in xrange(l):
@@ -86,34 +101,26 @@ for e in xrange(EPISODES):
 		done = True if t == l - 1 else False
 		batch_size = 32
 
-		price = state[0][0]
-		owned_quantity = state[0][1]
-		balance = state[0][2]
-
-		if t % 50 == 0:
-			printFormatted(price, owned_quantity, balance)
-
 		# sit
-		next_state = np.array([[data[t + 1], owned_quantity, balance]])
+		next_state = normalizeVec(data, t + 1, WINDOW_SIZE)
 		reward = 0
 
 		if action == 1: # buy
-			if balance < data[t]:
-				action = 0 # can't buy, force sit
-			else:
-				next_state = np.array([[data[t + 1], owned_quantity + 1, balance - data[t]]])
+			owned_quantity += 1
+			amount_spent += data[t]
 		elif action == 2: # sell
 			if owned_quantity == 0:
 				action = 0 # can't sell, force sit
 			else:
-				next_state = np.array([[data[t + 1], owned_quantity - 1, balance + data[t]]])
+				owned_quantity -= 1
+				amount_earned += data[t]
 				reward = data[t]
 
 		agent.memory.append((state, action, reward, next_state, done))
 		state = next_state
 
 		if done:
-			print "Profit earned: $" + str(balance - BALANCE)
+			print "Profit earned: $" + str(amount_earned - amount_spent)
 
 		if len(agent.memory) > batch_size:
 			agent.exp_replay(batch_size)
