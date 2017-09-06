@@ -9,12 +9,12 @@ import random
 from collections import deque
 
 class Agent:
-	def __init__(self, state_size, is_eval=False, model_num=0):
+	def __init__(self, state_size, is_eval=False, model_name=""):
 		self.state_size = state_size # normalized previous days
 		self.action_size = 3 # sit, buy, sell
 		self.memory = deque(maxlen=1000)
 		self.inventory = []
-		self.model_num = model_num
+		self.model_name = model_name
 		self.is_eval = is_eval
 
 		self.gamma = 0.95
@@ -22,7 +22,7 @@ class Agent:
 		self.epsilon_min = 0.01
 		self.epsilon_decay = 0.995
 
-		self.model = load_model("models/model_ep" + str(self.model_num)) if is_eval else self._model()
+		self.model = load_model("models/" + model_name) if is_eval else self._model()
 
 	def _model(self):
 		model = Sequential()

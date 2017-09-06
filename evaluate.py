@@ -1,16 +1,16 @@
 import matplotlib.pyplot as plt
 from agent.agent import Agent
-from functions import getStockDataVec, genStatePartition, formatPrice
+from functions import getStockDataVec, genStateNormalize, formatPrice
 
 WINDOW_SIZE = 7 # one week
-STOCK = "^GSPC_2015"
+STOCK = "BABA_2014"
 
-agent = Agent(WINDOW_SIZE, True, 580)
+agent = Agent(WINDOW_SIZE, True, "model_ep670") # 150 360
 data = getStockDataVec(STOCK)
 l = len(data) - 1
 batch_size = 32
 
-state = genStatePartition(data, 0, WINDOW_SIZE + 1) # normalized extended
+state = genStateNormalize(data, 0, WINDOW_SIZE) # normalized extended
 total_profit = 0
 agent.inventory = []
 
@@ -26,7 +26,7 @@ for t in xrange(l):
 	stock_data.append((t, data[t]))
 
 	# sit
-	next_state = genStatePartition(data, t + 1, WINDOW_SIZE + 1)
+	next_state = genStateNormalize(data, t + 1, WINDOW_SIZE)
 	reward = 0
 
 	if action == 1: # buy
@@ -48,7 +48,7 @@ for t in xrange(l):
 	state = next_state
 
 	if done:
-		print "---------- Total Profit: " + formatPrice(total_profit)
+		print STOCK + " Profit: " + formatPrice(total_profit)
 
 plt.plot(data, label=STOCK)
 plt.scatter(buy_x, buy_y, color="green", label="Buy")
