@@ -1,18 +1,21 @@
 from agent.agent import Agent
-from functions import getStockDataVec, genStateNormalize, formatPrice
+from functions import *
+import sys
 
-EPISODES = 1000
-WINDOW_SIZE = 7 # one week
-STOCK = "^GSPC_2014"
+if len(sys.argv) != 4:
+	print "Usage: python train.py [stock] [window] [episodes]"
+	exit()
 
-agent = Agent(WINDOW_SIZE)
-data = getStockDataVec(STOCK)
+stock_name, window_size, episode_count = sys.argv[1], int(sys.argv[2]), int(sys.argv[3])
+
+agent = Agent(window_size)
+data = getStockDataVec(stock_name)
 l = len(data) - 1
 batch_size = 32
 
-for e in xrange(EPISODES + 1):
-	print "Episode " + str(e) + "/" + str(EPISODES)
-	state = genStateNormalize(data, 0, WINDOW_SIZE)
+for e in xrange(episode_count + 1):
+	print "Episode " + str(e) + "/" + str(episode_count)
+	state = getState(data, 0, window_size + 1)
 
 	total_profit = 0
 	agent.inventory = []
@@ -21,7 +24,7 @@ for e in xrange(EPISODES + 1):
 		action = agent.act(state)
 
 		# sit
-		next_state = genStateNormalize(data, t + 1, WINDOW_SIZE)
+		next_state = getState(data, t + 1, window_size + 1)
 		reward = 0
 
 		if action == 1: # buy
@@ -39,7 +42,9 @@ for e in xrange(EPISODES + 1):
 		state = next_state
 
 		if done:
-			print "---------- Total Profit: " + formatPrice(total_profit)
+			print "--------------------------------"
+			print "Total Profit: " + formatPrice(total_profit)
+			print "--------------------------------"
 
 		if len(agent.memory) > batch_size:
 			agent.expReplay(batch_size)

@@ -15,22 +15,16 @@ def getStockDataVec(key):
 
 	return vec
 
-### 2 variants for representing an n-day state:
+# returns the sigmoid
+def sigmoid(x):
+	return 1 / (1 + math.exp(-x))
 
-# a) returns a normalized np array containing n stock values from time t - n + 1 to t
-def genStateNormalize(data, t, n):
-	d = t - n + 1
-	res = data[d:t + 1] if d >= 0 else -d * [data[0]] + data[0:t + 1] # pad with t0
-	m = max(res)
-
-	return np.array([map(lambda x: 1.0 * x / m, res)])
-
-# b) returns an np array containing the discrete pattern of ups(1) and downs(0)
-def genStateDiscretize(data, t, n):
+# returns an an n-day state representation ending at time t
+def getState(data, t, n):
 	d = t - n + 1
 	block = data[d:t + 1] if d >= 0 else -d * [data[0]] + data[0:t + 1] # pad with t0
 	res = []
 	for i in xrange(n - 1):
-		res.append(1 if block[i] < block[i + 1] else 0)
+		res.append(sigmoid(block[i + 1] - block[i]))
 
 	return np.array([res])
