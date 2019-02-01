@@ -8,7 +8,7 @@ As a result of the short-term state representation, the model is not very good a
 
 Some examples of results on test sets:
 
-![^GSPC 2015](https://github.com/edwardhdlu/q-trader/blob/master/images/^GSPC_2015.png)
+![GSPC 2015](https://github.com/edwardhdlu/q-trader/blob/master/images/^GSPC_2015.png)
 S&P 500, 2015. Profit of $431.04.
 
 ![BABA_2015](https://github.com/edwardhdlu/q-trader/blob/master/images/BABA_2015.png)
