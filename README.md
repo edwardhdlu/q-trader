@@ -24,20 +24,35 @@ Google, Inc, August 2017. Profit of $19.37.
 
 To install dependencies and generate environment
 ```bash
-conda create -n python2 python=2.7 anaconda
+conda create -n q-trader python=3.6 anaconda
 conda install --yes --file requirements.txt
-source activate python2
+source activate q-trader
+
+# or
+./setup.sh
 
 ```
 
 To train the model, download a training and test csv files from [Yahoo! Finance](https://ca.finance.yahoo.com/quote/%5EGSPC/history?p=%5EGSPC) into `data/`
 ```bash
-python train.py ^GSPC 10 1000
+
+# Manually
+python src/train.py ^GSPC 10 1000
+
+# By shell script
+./train.sh
+
 ```
 
 Then when training finishes (minimum 200 episodes for results):
 ```bash
+
+# Manually
 python evaluate.py ^GSPC_2011 model_ep1000
+
+# By shell script
+./evaluate.sh
+
 ```
 
 ## References
