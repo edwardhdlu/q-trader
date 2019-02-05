@@ -22,7 +22,7 @@ state = getState(data, 0, window_size + 1)
 total_profit = 0
 agent.inventory = []
 
-for t in xrange(l):
+for t in range(l):
 	action = agent.act(state)
 
 	# sit
