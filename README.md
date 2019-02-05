@@ -8,7 +8,7 @@ As a result of the short-term state representation, the model is not very good a
 
 Some examples of results on test sets:
 
-![^GSPC 2015](https://github.com/edwardhdlu/q-trader/blob/master/images/^GSPC_2015.png)
+![GSPC 2015](https://github.com/edwardhdlu/q-trader/blob/master/images/^GSPC_2015.png)
 S&P 500, 2015. Profit of $431.04.
 
 ![BABA_2015](https://github.com/edwardhdlu/q-trader/blob/master/images/BABA_2015.png)
@@ -22,15 +22,37 @@ Google, Inc, August 2017. Profit of $19.37.
 
 ## Running the Code
 
-To train the model, download a training and test csv files from [Yahoo! Finance](https://ca.finance.yahoo.com/quote/%5EGSPC/history?p=%5EGSPC) into `data/`
+To install dependencies and generate environment
+```bash
+conda create -n q-trader python=3.6 anaconda
+conda install --yes --file requirements.txt
+source activate q-trader
+
+# or
+./setup.sh
+
 ```
-mkdir model
-python train ^GSPC 10 1000
+
+To train the model, download a training and test csv files from [Yahoo! Finance](https://ca.finance.yahoo.com/quote/%5EGSPC/history?p=%5EGSPC) into `data/`
+```bash
+
+# Manually
+python src/train.py ^GSPC 10 1000
+
+# By shell script
+./train.sh
+
 ```
 
 Then when training finishes (minimum 200 episodes for results):
-```
+```bash
+
+# Manually
 python evaluate.py ^GSPC_2011 model_ep1000
+
+# By shell script
+./evaluate.sh
+
 ```
 
 ## References
