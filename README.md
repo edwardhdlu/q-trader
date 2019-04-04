@@ -24,7 +24,7 @@ Google, Inc, August 2017. Profit of $19.37.
 
 To train the model, download a training and test csv files from [Yahoo! Finance](https://ca.finance.yahoo.com/quote/%5EGSPC/history?p=%5EGSPC) into `data/`
 ```
-mkdir model
+mkdir models
 python train ^GSPC 10 1000
 ```
 
