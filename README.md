@@ -1,6 +1,11 @@
+## References
+
+[Deep Q-Learning with Keras and Gym](https://keon.io/deep-q-learning/) - Q-learning overview and Agent skeleton code
+https://quantdare.com/deep-reinforcement-trading/
+
+
 # Q-Trader
 
-https://quantdare.com/deep-reinforcement-trading/
 
 An implementation of Q-learning applied to (short-term) stock trading. The model uses n-day windows of closing prices to determine if the best action to take at a given time is to buy, sell or sit.
 
@@ -35,6 +40,3 @@ Then when training finishes (minimum 200 episodes for results):
 python evaluate.py ^GSPC_2011 model_ep1000
 ```
 
-## References
-
-[Deep Q-Learning with Keras and Gym](https://keon.io/deep-q-learning/) - Q-learning overview and Agent skeleton code
