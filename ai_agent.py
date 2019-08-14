@@ -20,7 +20,7 @@ class Agent:
 		self.gamma         = 0.95 #aka decay or discount rate, determines the importance of future rewards.If=0 then agent will only learn to consider current rewards. if=1 it will make it strive for a long-term high reward.
 		self.epsilon       = 1.0  #aka exploration rate, this is the rate in which an agent randomly decides its action rather than prediction.
 		self.epsilon_min   = 0.01 #we want the agent to explore at least this amount.
-		self.epsilon_decay = 0.995#we want to decrease the number of explorations as it gets good at trading.
+		self.epsilon_decay = 1#0.995#we want to decrease the number of explorations as it gets good at trading.
 
 		self.model         = load_model("files/output/" + model_name) if use_existing_model else self._build_net()
 
@@ -39,12 +39,13 @@ class Agent:
 
 	#action is chosen by letting the model predict the action of current state based on the data you trained
 	def predict(self, state):
-		if not self.use_existing_model and np.random.rand() <= self.epsilon:
+		if not self.use_existing_model and np.random.rand() < self.epsilon:
 			random_action = random.randrange(self.action_size)
 			return random_action
 
 		pred = self.model.predict(state)
 		best_action = np.argmax(pred[0])
+		#print(f'best_action found by predicting={best_action}')
 		return best_action
 
 	#fit model based on data x,y:  y=reward, x=state, action
@@ -75,6 +76,10 @@ class Agent:
 
 		if self.epsilon > self.epsilon_min:
 			self.epsilon *= self.epsilon_decay
+			#print(f'epsilon={self.epsilon}')
+		else:
+			print(f'warn!!! epsilon={self.epsilon} is too low. u may have to set epsilon_decay to 1')
+
 
 	def prepare_mem_batch(self, batch_size):
 		memory_batch = []

@@ -65,10 +65,10 @@ def learn():
 print('time is')
 print(datetime.now().strftime('%H:%M:%S'))
 start_time = time.time()
-
+np.random.seed(7)
 stock_name    = '^GSPC_2011'#^GSPC  ^GSPC_2011
 window_size   = 10# (t) 10 days
-episode_count = 10# minimum 200 episodes for results. episode represent trade and learn on all data.
+episode_count = 20# minimum 200 episodes for results. episode represent trade and learn on all data.
 batch_size    = 10# learn  model every bar start from bar # batch_size
 use_existing_model = False
 agent         = Agent(window_size, use_existing_model, '')
