@@ -14,11 +14,8 @@ def bt():
     total_profit = 0
     trade_count   = 0
     for t in range(l):
-        action = agent.act(state)
-
-        # sit
-        next_state = env.get_state(data, t + 1, window_size + 1)
         reward = 0
+        action = agent.predict(state)
 
         if action == 1:  # buy
             agent.open_orders.append(data[t])
@@ -30,8 +27,12 @@ def bt():
             reward = max(data[t] - bought_price, 0)
             total_profit += data[t] - bought_price
             print("Sell @ " + formatPrice(data[t]) + " | Profit: " + formatPrice(data[t] - bought_price))
+        else:# hold
+            print ('hold')
+            reward     = 0
 
         done = True if t == l - 1 else False
+        next_state = env.get_state(data, t + 1, window_size + 1)
         agent.memory.append((state, action, reward, next_state, done))
         state = next_state
 
@@ -53,6 +54,8 @@ window_size = model.layers[0].input.shape.as_list()[1]
 agent = Agent(window_size, True, model_name)
 data = getStockDataVec(stock_name)
 l = len(data) - 1
-batch_size        = 32
+
 agent.open_orders = []
+print(f'Backtesting {stock_name} (has {l} bars), window of {window_size}')
+
 bt()

@@ -33,32 +33,38 @@ class Agent:
 		model.compile  (loss="mse"      , optimizer=Adam(lr=0.001))
 		return model
 
-	#action is done by predict
-	def act(self, state):
+	#action is chosen by letting the model predict the action of current state based on the data you trained
+	def predict(self, state):
 		if not self.is_eval and np.random.rand() <= self.epsilon:
 			random_action = random.randrange(self.action_size)
 			return random_action
 
-		pred_prob = self.model.predict(state)
-		pred = np.argmax(pred_prob[0])
-		return pred
+		pred = self.model.predict(state)
+		action = np.argmax(pred[0])
+		return action
 
-	#fit model based on data x,y:  y=reward, x = state, action
-	def expReplay(self, batch_size):
-		mini_batch = []
+	#fit model based on data x,y:  y=reward, x=state, action
+	#This training process makes the neural net to predict the reward value from a certain state.
+	def learn(self, batch_size):
+		memory_batch = []
 		l = len(self.memory)
 		for i in range(l - batch_size + 1, l):
-			mini_batch.append(self.memory[i])
+			memory_batch.append(self.memory[i])
 
-		for state, action, reward, next_state, done in mini_batch:
+		for curr_state, action, reward, next_state, done in memory_batch:
+
 			target = reward
 			if not done:
-				target = reward + self.gamma * np.amax(self.model.predict(next_state)[0])
+				pred = self.model.predict(next_state)
+				target = reward + self.gamma * np.amax(pred[0])
 
-			target_f = self.model.predict(state)
-			target_f[0][action] = target
-			self.model\
-				      .fit(state, target_f, epochs=1, verbose=0)
+			y = self.model.predict(curr_state)
+			y[0][action] = target
+			self.model.fit\
+						  (curr_state
+						   , y
+						   , epochs=1
+						   , verbose=0)
 
 		if self.epsilon > self.epsilon_min:
-			self.epsilon *= self.epsilon_decay 
+		   self.epsilon *= self.epsilon_decay
