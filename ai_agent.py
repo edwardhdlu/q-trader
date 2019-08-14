@@ -53,16 +53,20 @@ class Agent:
 
 		for curr_state, action, reward, next_state, done in memory_batch:
 
-			target = reward
+			y = reward
 			if not done:
+				# predict the future discounted reward
 				pred = self.model.predict(next_state)
-				target = reward + self.gamma * np.amax(pred[0])
+				y = reward + self.gamma * np.amax(pred[0])
 
-			y = self.model.predict(curr_state)
-			y[0][action] = target
+			# make the agent to approximately map
+			# the current state to future discounted reward
+			# We'll call that y_f
+			y_f = self.model.predict(curr_state)
+			y_f[0][action] = y
 			self.model.fit\
 						  (curr_state
-						   , y
+						   , y_f
 						   , epochs=1
 						   , verbose=0)
 
