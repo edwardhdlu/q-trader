@@ -24,7 +24,7 @@ def learn():
 
 			if action == 1:  # buy
 				agent.open_orders.append(data[t])
-				print(f'{t} Buy  @ ' + formatPrice(data[t]))
+				print(f'row #{t} Buy  @ ' + formatPrice(data[t]))
 				reward = 0
 				trade_count += 1
 
@@ -34,9 +34,9 @@ def learn():
 				profit = data[t] - bought_price
 				reward = env.get_reward(profit)
 				total_profit += profit
-				print(f'{t} Sell @ ' + formatPrice(data[t]) + " | Profit: " + formatPrice(profit))
+				print(f'row #{t} Sell @ ' + formatPrice(data[t]) + " | Profit: " + formatPrice(profit))
 			else:# hold
-				print (f'{t} Hold')
+				#print (f'row #{t} Hold')
 				reward     = 0
 
 			done = True if t == l - 1 else False
@@ -68,8 +68,8 @@ start_time = time.time()
 np.random.seed(7)
 stock_name    = '^GSPC_2011'#^GSPC  ^GSPC_2011
 window_size   = 10# (t) 10 days
-episode_count = 20# minimum 200 episodes for results. episode represent trade and learn on all data.
-batch_size    = 10# learn  model every bar start from bar # batch_size
+episode_count = 200# minimum 200 episodes for results. episode represent trade and learn on all data.
+batch_size    = 15# learn  model every bar start from bar # batch_size
 use_existing_model = False
 agent         = Agent(window_size, use_existing_model, '')
 data          = getStockDataVec(stock_name)

@@ -31,7 +31,7 @@ def bt():
             total_profit += profit - trading_fee
             print("Sell @ " + formatPrice(data[t]) + " | Profit: " + formatPrice(profit))
         else:# hold
-            #print ('hold')
+            #print ('Hold')
             reward     = 0
 
         done = True if t == l - 1 else False
