@@ -34,6 +34,7 @@ def plot_barchart(list, title="BT", ylabel="Price", xlabel="Date", colors='green
 	myarray = np.asarray(list)
 	colors = colors  # 'green'#np.array([(1,0,0)]*l)
 	# colors[myarray > 0.0] = (0,0,1)
+	plt.clf()
 	plt.bar(x, myarray, color=colors)
 	plt.xlabel(xlabel)
 	plt.ylabel(ylabel)
