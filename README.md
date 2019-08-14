@@ -18,18 +18,21 @@ model output(action prediction):
  
 The policy network outputs an action daily and the market returns the rewards of such actions (i.e., the amount of money gain or lost).
 
-![nn](https://github.com/loliksamuel/py-ML-rl-trade/files/output/nn.png)
+![nn](https://github.com/loliksamuel/py-ML-rl-trade/tree/master/files/output/nn.png)
 
-![rl](https://github.com/loliksamuel/py-ML-rl-trade/files/output/rl.png)
+![rl](https://github.com/loliksamuel/py-ML-rl-trade/tree/master/files/output/rl.png)
 
 
 
 this Q-learning implementation applied to (short-term) stock trading. 
-The model uses t-day windows of closing prices to determine if the best action to take at a given time is to buy, sell or hold.
+The model uses t-day windows of close prices to determine if the best action to take at a given time is to buy, sell or hold.
 
 
 As a result of the short-term state representation, 
 the model is not very good at making decisions over long-term trends, but is quite good at predicting peaks and troughs.
+We want to decrease this gap between the prediction and the target (loss). We will define our loss function as follows:
+
+![rl](https://github.com/loliksamuel/py-ML-rl-trade/tree/master/files/output/loss.png)
 
 the model get updated every few days.
 ## Results
