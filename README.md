@@ -15,12 +15,12 @@ model output(action prediction):
 1. hold
 2. buy
 3. sell
-
+ 
 The policy network outputs an action daily and the market returns the rewards of such actions (i.e., the amount of money gain or lost).
 
-![nn](https://miro.medium.com/max/1400/1*ozI6CyZOIGWQBqqrtOQ-bQ.png)
+![nn](https://github.com/loliksamuel/py-ML-rl-trade/files/output/nn.png)
 
-![rl](http://manul.io/img/gekkos/arch.png)
+![rl](https://github.com/loliksamuel/py-ML-rl-trade/files/output/rl.png)
 
 
 

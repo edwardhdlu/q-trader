@@ -56,6 +56,6 @@ data = getStockDataVec(stock_name)
 l = len(data) - 1
 
 agent.open_orders = []
-print(f'Backtesting {stock_name} (has {l} bars), window of {window_size}')
+print(f'Backtesting {stock_name} (has {l} bars), window of {window_size} bars')
 
 bt()

@@ -44,7 +44,7 @@ class Agent:
 		return action
 
 	#fit model based on data x,y:  y=reward, x=state, action
-	#This training process makes the neural net to predict the reward value from a certain state.
+	#This training process makes the neural net to predict the action to do based on specific state.
 	def learn(self, batch_size):
 		memory_batch = []
 		l = len(self.memory)
