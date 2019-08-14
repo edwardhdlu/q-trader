@@ -36,6 +36,8 @@ the model is not very good at making decisions in long-term , but is quite good 
 To make the model perform well in long-term, 
 we need to take into account not only the immediate rewards but also the future rewards we are going to get. 
 In order to do this, we are going to have a ‘discount rate’ or ‘gamma’. 
+If gamma=0 then agent will only learn to consider current rewards. 
+if gamma=1 then agent will make it strive for a long-term high reward.
 This way the agent will learn to maximize the discounted future reward based on the given state.
 
 The loss is just a value that indicates how far our prediction is from the actual target

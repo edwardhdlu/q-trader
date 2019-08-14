@@ -33,7 +33,7 @@ def bt():
 
         done = True if t == l - 1 else False
         next_state = env.get_state(data, t + 1, window_size + 1)
-        agent.memory.append((state, action, reward, next_state, done))
+        agent.remmember(state, action, reward, next_state, done)
         state = next_state
 
         if done:

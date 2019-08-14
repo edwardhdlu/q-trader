@@ -39,7 +39,7 @@ def learn():
 			done = True if t == l - 1 else False
 			next_state = env.get_state(data, t + 1, window_size + 1)
 			#print(f'next_state={next_state}')
-			agent.memory.append((state, action, reward, next_state, done))
+			agent.remember(state, action, reward, next_state, done)
 			state = next_state
 
 			if done:
@@ -57,7 +57,7 @@ def learn():
 stock_name    = '^GSPC'#^GSPC  ^GSPC_2011
 window_size   = 10# (t) 10 days
 episode_count = 1# minimum 200 episodes for results. a number of games we want the agent to play.
-batch_size    = 32# fit model every 32 actions
+batch_size    = 32# learn  model every 32 trades
 agent         = Agent(window_size)
 data          = getStockDataVec(stock_name)
 l             = len(data) - 1

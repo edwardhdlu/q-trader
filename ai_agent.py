@@ -17,7 +17,7 @@ class Agent:
 		self.is_eval       = use_existing_model
 		self.actions       = ['hold', 'buy', 'sell']
 		self.action_size   = len(self.actions)
-		self.gamma         = 0.95 #aka decay or discount rate, to calculate the future discounted reward.
+		self.gamma         = 0.95 #aka decay or discount rate, determines the importance of future rewards.If=0 then agent will only learn to consider current rewards. if=1 it will make it strive for a long-term high reward.
 		self.epsilon       = 1.0  #aka exploration rate, this is the rate in which an agent randomly decides its action rather than prediction.
 		self.epsilon_min   = 0.01 #we want the agent to explore at least this amount.
 		self.epsilon_decay = 0.995#we want to decrease the number of explorations as it gets good at trading.
@@ -32,6 +32,10 @@ class Agent:
 		model.add(Dense(self.action_size, activation="linear"))
 		model.compile  (loss="mse"      , optimizer=Adam(lr=0.001))
 		return model
+
+	def remember(self ,state, action, reward, next_state, done):
+		self.memory.append(state, action, reward, next_state, done)
+
 
 	#action is chosen by letting the model predict the action of current state based on the data you trained
 	def predict(self, state):
