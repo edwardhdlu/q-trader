@@ -68,10 +68,10 @@ Google, Inc, August 2017. Profit of $19.37.
 
 2. train model with minimum 200 episodes for good results:
 ```
-python train
+python rl.py
 ```
 
-3. backtest model created in files/output/ on any stock
+3. back-test last model created in files/output/ on any stock
 ```
 python backtest.py
 ```
