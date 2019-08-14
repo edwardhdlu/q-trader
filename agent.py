@@ -18,8 +18,8 @@ class Agent:
 
 		self.action_size   = 3 # sit, buy, sell
 		self.gamma         = 0.95 #aka decay or discount rate, to calculate the future discounted reward.
-		self.epsilon       = 1.0#aka exploration rate, this is the rate in which an agent randomly decides its action rather than prediction.
-		self.epsilon_min   = 0.01   #we want the agent to explore at least this amount.
+		self.epsilon       = 1.0  #aka exploration rate, this is the rate in which an agent randomly decides its action rather than prediction.
+		self.epsilon_min   = 0.01 #we want the agent to explore at least this amount.
 		self.epsilon_decay = 0.995#we want to decrease the number of explorations as it gets good at playing games.
 
 		self.model         = load_model("files/output/" + model_name) if is_eval else self._model()
