@@ -3,6 +3,8 @@ from utils import *
 import market_env as env
 from numpy import array
 import matplotlib.pyplot as plt
+from datetime import datetime
+import time
 
 def learn():
 	profit_vs_episode = []
@@ -12,7 +14,6 @@ def learn():
 		print(f'state={state}')
 		total_profit = 0
 		trade_count = 0
-
 		agent.open_orders = []
 
 		for t in range(l):
@@ -34,8 +35,8 @@ def learn():
 				total_profit += profit
 				print("Sell @ " + formatPrice(data[t]) + " | Profit: " + formatPrice(profit))
 			else:# hold
-			#	print ("hold")
-			    reward     = 0
+				print ("hold")
+				reward     = 0
 
 			done = True if t == l - 1 else False
 			next_state = env.get_state(data, t + 1, window_size + 1)
@@ -59,9 +60,13 @@ def learn():
 	return profit_vs_episode
 
 
+print('time is')
+print(datetime.now().strftime('%H:%M:%S'))
+start_time = time.time()
+
 stock_name    = '^GSPC_20'#^GSPC  ^GSPC_2011
 window_size   = 10# (t) 10 days
-episode_count = 2# minimum 200 episodes for results. episode represent trade and learn on all data.
+episode_count = 20# minimum 200 episodes for results. episode represent trade and learn on all data.
 batch_size    = 10# learn  model every bar start from bar # batch_size
 use_existing_model = False
 agent         = Agent(window_size, use_existing_model, '')
@@ -75,3 +80,7 @@ print('python backtest.py ')
 
 print(f'see plot of profit_vs_episode = {profit_vs_episode}')
 plot_barchart(profit_vs_episode	  ,  "profit per episode" ,  "total profit", "episode", 'blue')
+
+print('time is')
+print(datetime.now().strftime('%H:%M:%S'))
+print("------------------------program ran %s seconds -----------------------------------" % (time.time() - start_time))
