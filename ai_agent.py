@@ -14,7 +14,7 @@ class Agent:
 		self.memory        = deque(maxlen=1000)
 		self.open_orders   = []
 		self.model_name    = model_name
-		self.is_eval       = use_existing_model
+		self.use_existing_model       = use_existing_model
 		self.actions       = ['hold', 'buy', 'sell']
 		self.action_size   = len(self.actions)
 		self.gamma         = 0.95 #aka decay or discount rate, determines the importance of future rewards.If=0 then agent will only learn to consider current rewards. if=1 it will make it strive for a long-term high reward.
@@ -34,34 +34,33 @@ class Agent:
 		return model
 
 	def remember(self ,state, action, reward, next_state, done):
-		self.memory.append(state, action, reward, next_state, done)
+		self.memory.append((state, action, reward, next_state, done))
 
 
 	#action is chosen by letting the model predict the action of current state based on the data you trained
 	def predict(self, state):
-		if not self.is_eval and np.random.rand() <= self.epsilon:
+		if not self.use_existing_model and np.random.rand() <= self.epsilon:
 			random_action = random.randrange(self.action_size)
 			return random_action
 
 		pred = self.model.predict(state)
-		action = np.argmax(pred[0])
-		return action
+		best_action = np.argmax(pred[0])
+		return best_action
 
 	#fit model based on data x,y:  y=reward, x=state, action
 	#This training process makes the neural net to predict the action to do based on specific state.
 	def learn(self, batch_size):
-		memory_batch = []
-		l = len(self.memory)
-		for i in range(l - batch_size + 1, l):
-			memory_batch.append(self.memory[i])
+		memory_batch = self.prepare_mem_batch(batch_size)
 
 		for curr_state, action, reward, next_state, done in memory_batch:
 
-			y = reward
+
 			if not done:
 				# predict the future discounted reward
 				pred = self.model.predict(next_state)
 				y = reward + self.gamma * np.amax(pred[0])
+			else:
+				y = reward
 
 			# make the agent to approximately map
 			# the current state to future discounted reward
@@ -75,4 +74,11 @@ class Agent:
 						   , verbose=0)
 
 		if self.epsilon > self.epsilon_min:
-		   self.epsilon *= self.epsilon_decay
+			self.epsilon *= self.epsilon_decay
+
+	def prepare_mem_batch(self, batch_size):
+		memory_batch = []
+		l = len(self.memory)
+		for i in range(l - batch_size + 1, l):
+			memory_batch.append(self.memory[i])
+		return memory_batch

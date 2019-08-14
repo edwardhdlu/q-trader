@@ -16,13 +16,14 @@ def learn():
 		agent.open_orders = []
 
 		for t in range(l):
-			reward = 0
+
 			action = agent.predict(state)
 
 
 			if action == 1:  # buy
 				agent.open_orders.append(data[t])
 				print("Buy  @ " + formatPrice(data[t]))
+				reward = 0
 				trade_count += 1
 
 			elif action == 2 and len(agent.open_orders) > 0:  # sell (or exiting trade)
@@ -31,10 +32,10 @@ def learn():
 				profit = data[t] - bought_price
 				reward = env.get_reward(profit)
 				total_profit += profit
-				print("Sell @ " + formatPrice(data[t]) + " | Profit: " + formatPrice(data[t] - bought_price))
-			# else:# hold
+				print("Sell @ " + formatPrice(data[t]) + " | Profit: " + formatPrice(profit))
+			else:# hold
 			#	print ("hold")
-			#   reward     = 0
+			    reward     = 0
 
 			done = True if t == l - 1 else False
 			next_state = env.get_state(data, t + 1, window_size + 1)
@@ -52,13 +53,15 @@ def learn():
 
 		if e % 10 == 0:
 			agent.model.save("files/output/model_ep" + str(e))
+			print(f'saved model at files/output/model_ep{str(e)}')
 
 
-stock_name    = '^GSPC'#^GSPC  ^GSPC_2011
+stock_name    = '^GSPC_20'#^GSPC  ^GSPC_2011
 window_size   = 10# (t) 10 days
-episode_count = 1# minimum 200 episodes for results. a number of games we want the agent to play.
-batch_size    = 32# learn  model every 32 trades
-agent         = Agent(window_size)
+episode_count = 31# minimum 200 episodes for results. episode represent trade and learn on all data.
+batch_size    = 10# learn  model every bar start from bar # batch_size
+use_existing_model = False
+agent         = Agent(window_size, use_existing_model, '')
 data          = getStockDataVec(stock_name)
 l             = len(data) - 1
 
