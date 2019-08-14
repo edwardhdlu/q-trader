@@ -1,11 +1,11 @@
 from ai_agent import Agent
 from utils import *
 import market_env as env
-
-
+from numpy import array
+import matplotlib.pyplot as plt
 
 def learn():
-
+	profit_vs_episode = []
 	for e in range(episode_count + 1):
 		print("Episode " + str(e) + "/" + str(episode_count))
 		state = env.get_state(data, 0, window_size + 1)
@@ -47,6 +47,7 @@ def learn():
 				print("---------------------------------------")
 				print(f'Total Profit: {formatPrice(total_profit)} , Total trades: {trade_count}')
 				print("---------------------------------------")
+				profit_vs_episode.append(total_profit)
 
 			if len(agent.memory) > batch_size:
 				agent.learn(batch_size)
@@ -55,10 +56,12 @@ def learn():
 			agent.model.save("files/output/model_ep" + str(e))
 			print(f'saved model at files/output/model_ep{str(e)}')
 
+	return profit_vs_episode
+
 
 stock_name    = '^GSPC_20'#^GSPC  ^GSPC_2011
 window_size   = 10# (t) 10 days
-episode_count = 31# minimum 200 episodes for results. episode represent trade and learn on all data.
+episode_count = 2# minimum 200 episodes for results. episode represent trade and learn on all data.
 batch_size    = 10# learn  model every bar start from bar # batch_size
 use_existing_model = False
 agent         = Agent(window_size, use_existing_model, '')
@@ -66,6 +69,9 @@ data          = getStockDataVec(stock_name)
 l             = len(data) - 1
 
 print(f'Running {episode_count} episodes, on {stock_name} has {l} bars, window of {window_size}, batch of {batch_size}')
-learn()
+profit_vs_episode = learn()
 print(f'finished learning the model. now u can backtest the model created in files/output/ on any stock')
 print('python backtest.py ')
+
+print(f'see plot of profit_vs_episode = {profit_vs_episode}')
+plot_barchart(profit_vs_episode	  ,  "profit per episode" ,  "total profit", "episode", 'blue')

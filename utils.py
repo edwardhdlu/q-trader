@@ -1,5 +1,6 @@
 import numpy as np
 import math
+import matplotlib.pyplot as plt
 
 # prints formatted price
 def formatPrice(n):
@@ -14,4 +15,29 @@ def getStockDataVec(key):
 		vec.append(float(line.split(",")[4]))
 
 	return vec
+
+
+def plot_histogram(x, bins, title, xlabel, ylabel, xmin=None, xmax=None):
+	plt.clf()
+	plt.hist(x, bins=bins)
+	if xmin != None:
+		plt.xlim(xmin, xmax)
+	plt.title(title)
+	plt.xlabel(xlabel)
+	plt.ylabel(ylabel)
+	plt.savefig('files/output/' + title + '.png')
+
+
+def plot_barchart(list, title="BT", ylabel="Price", xlabel="Date", colors='green'):
+	l = len(list)
+	x = range(l)
+	myarray = np.asarray(list)
+	colors = colors  # 'green'#np.array([(1,0,0)]*l)
+	# colors[myarray > 0.0] = (0,0,1)
+	plt.bar(x, myarray, color=colors)
+	plt.xlabel(xlabel)
+	plt.ylabel(ylabel)
+	plt.title(title)
+	plt.savefig('files/output/' + title + '.png')
+
 
