@@ -12,11 +12,11 @@ class Agent:
 	def __init__(self, state_size, is_eval=False, model_name=""):
 		self.state_size    = state_size # normalized previous days
 		self.memory        = deque(maxlen=1000)
-		self.inventory     = []
+		self.open_orders   = []
 		self.model_name    = model_name
 		self.is_eval       = is_eval
 
-		self.action_size   = 3 # sit, buy, sell
+		self.action_size   = 3 # hold(0), buy(1), sell(2)
 		self.gamma         = 0.95 #aka decay or discount rate, to calculate the future discounted reward.
 		self.epsilon       = 1.0  #aka exploration rate, this is the rate in which an agent randomly decides its action rather than prediction.
 		self.epsilon_min   = 0.01 #we want the agent to explore at least this amount.
@@ -39,8 +39,9 @@ class Agent:
 			random_action = random.randrange(self.action_size)
 			return random_action
 
-		pred = self.model.predict(state)
-		return np.argmax(pred[0])
+		pred_prob = self.model.predict(state)
+		pred = np.argmax(pred_prob[0])
+		return pred
 
 
 	def expReplay(self, batch_size):

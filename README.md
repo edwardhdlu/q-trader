@@ -6,11 +6,14 @@ https://quantdare.com/deep-reinforcement-trading/
 
 
 # Q-Trader
+![rl](http://manul.io/img/gekkos/arch.png)
 
 
-An implementation of Q-learning applied to (short-term) stock trading. The model uses n-day windows of closing prices to determine if the best action to take at a given time is to buy, sell or sit.
+An implementation of Q-learning applied to (short-term) stock trading. 
+The model uses n-day windows of closing prices to determine if the best action to take at a given time is to buy, sell or hold.
 
-As a result of the short-term state representation, the model is not very good at making decisions over long-term trends, but is quite good at predicting peaks and troughs.
+As a result of the short-term state representation, 
+the model is not very good at making decisions over long-term trends, but is quite good at predicting peaks and troughs.
 
 ## Results
 

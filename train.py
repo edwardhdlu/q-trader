@@ -1,5 +1,6 @@
 from agent import Agent
 from utils import *
+import env as env
 
 stock_name    = '^GSPC_20'#^GSPC  ^GSPC_2011
 window_size   = 10
@@ -14,31 +15,33 @@ print(f'Running {episode_count} episodes, on {stock_name} has {l} bars, window o
 
 for e in range(episode_count + 1):
 	print( "Episode " + str(e) + "/" + str(episode_count))
-	state = getState(data, 0, window_size + 1)
+	state = env.get_state(data, 0, window_size + 1)
 	print(f'state={state}')
 	total_profit    = 0
 	trade_count     = 0
-	agent.inventory = []
+	agent.open_orders = []
 
 	for t in range(l):
 		action = agent.act(state)
 
-		# sit
-		next_state = getState(data, t + 1, window_size + 1)
+
+		next_state = env.get_state(data, t + 1, window_size + 1)
 		reward = 0
 
 		if action == 1: # buy
-			agent.inventory.append(data[t])
+			agent.open_orders.append(data[t])
 			print ("Buy  @ " + formatPrice(data[t]))
 			trade_count +=1
 
-		elif action == 2 and len(agent.inventory) > 0: # sell (or exiting trade)
-			bought_price = agent.inventory.pop(0)
-			reward       = max(data[t] - bought_price, 0)
-			total_profit += data[t] - bought_price
+		elif action == 2 and len(agent.open_orders) > 0: # sell (or exiting trade)
+
+			bought_price = agent.open_orders.pop(0)
+			profit       = data[t] - bought_price
+			reward       = env.get_reward(profit)
+			total_profit += profit
 			print ("Sell @ " + formatPrice(data[t]) + " | Profit: " + formatPrice(data[t] - bought_price))
-		#else:
-		#	print ("sit")
+		#else:# hold
+		#	print ("hold")
 
 		done = True if t == l - 1 else False
 		agent.memory.append((state, action, reward, next_state, done))
