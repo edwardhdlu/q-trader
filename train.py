@@ -1,11 +1,11 @@
 from agent import Agent
 from utils import *
-import env as env
+import market_env as env
 
 stock_name    = '^GSPC_20'#^GSPC  ^GSPC_2011
 window_size   = 10
 episode_count = 10#minimum 200 episodes for results. a number of games we want the agent to play.
-batch_size    = 32
+batch_size    = 32#fit model every 32 actions
 reward        = 0
 agent         = Agent(window_size)
 data          = getStockDataVec(stock_name)

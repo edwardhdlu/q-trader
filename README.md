@@ -6,6 +6,9 @@ https://quantdare.com/deep-reinforcement-trading/
 
 
 # Q-Trader
+As illustrated in below figure model gets updated every few days based on historical data including market and investment status. 
+The policy network outputs an action daily and the market returns the rewards of such actions (i.e., the amount of money gain or lost).
+
 ![rl](http://manul.io/img/gekkos/arch.png)
 
 
