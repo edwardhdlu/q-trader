@@ -1,15 +1,14 @@
-import keras
 from keras.models import load_model
 
-from agent.agent import Agent
-from functions import *
+from agent import Agent
+from utils import *
 import sys
 
-if len(sys.argv) != 3:
-	print ("Usage: python evaluate.py [stock] [model]")
-	exit()
 
-stock_name, model_name = sys.argv[1], sys.argv[2]
+stock_name    = '^GSPC_2011'#^GSPC  ^GSPC_2011
+model_name    = 'model_ep10'
+
+trade_count   = 0
 model = load_model("files/output/" + model_name)
 window_size = model.layers[0].input.shape.as_list()[1]
 
@@ -31,19 +30,20 @@ for t in range(l):
 
 	if action == 1: # buy
 		agent.inventory.append(data[t])
-		print ("Buy: " + formatPrice(data[t]))
+		print ("Buy  @ " + formatPrice(data[t]))
+		trade_count  +=1
 
 	elif action == 2 and len(agent.inventory) > 0: # sell
 		bought_price = agent.inventory.pop(0)
 		reward = max(data[t] - bought_price, 0)
 		total_profit += data[t] - bought_price
-		print ("Sell: " + formatPrice(data[t]) + " | Profit: " + formatPrice(data[t] - bought_price))
+		print ("Sell @ " + formatPrice(data[t]) + " | Profit: " + formatPrice(data[t] - bought_price))
 
 	done = True if t == l - 1 else False
 	agent.memory.append((state, action, reward, next_state, done))
 	state = next_state
 
 	if done:
-		print( "--------------------------------")
-		print( stock_name + " Total Profit: " + formatPrice(total_profit))
-		print( "--------------------------------")
+		print( "-----------------------------------------")
+		print( f'Total Profit: {formatPrice(total_profit)} , Total trades: {trade_count}')
+		print( "-----------------------------------------")

@@ -1,6 +1,5 @@
-from agent.agent import Agent
-from functions import *
-import sys
+from agent import Agent
+from utils import *
 
 stock_name    = '^GSPC_20'#^GSPC  ^GSPC_2011
 window_size   = 10
@@ -46,9 +45,9 @@ for e in range(episode_count + 1):
 		state = next_state
 
 		if done:
-			print( "-------------------------------------")
+			print( "---------------------------------------")
 			print( f'Total Profit: {formatPrice(total_profit)} , Total trades: {trade_count}')
-			print( "-------------------------------------")
+			print( "---------------------------------------")
 
 		if len(agent.memory) > batch_size:
 			agent.expReplay(batch_size)

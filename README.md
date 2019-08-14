@@ -39,6 +39,6 @@ python train
 
 3. backtest model created in files/output/ on any stock
 ```
-python evaluate.py
+python backtest.py
 ```
 
