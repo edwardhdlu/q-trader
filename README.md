@@ -6,14 +6,20 @@ https://quantdare.com/deep-reinforcement-trading/
 
 
 # Q-Trader
-As illustrated in below figure model gets updated every few days based on historical data including market and investment status. 
+As illustrated in below figure model gets updated every few days based on:
+ 1. historical stock data 
+ 2. historicsl market data 
+ 3. investment status, action(buy,sell,hold), and reward 
 The policy network outputs an action daily and the market returns the rewards of such actions (i.e., the amount of money gain or lost).
+
+![nn](https://miro.medium.com/max/1400/1*ozI6CyZOIGWQBqqrtOQ-bQ.png)
 
 ![rl](http://manul.io/img/gekkos/arch.png)
 
 
+
 An implementation of Q-learning applied to (short-term) stock trading. 
-The model uses n-day windows of closing prices to determine if the best action to take at a given time is to buy, sell or hold.
+The model uses t-day windows of closing prices to determine if the best action to take at a given time is to buy, sell or hold.
 
 As a result of the short-term state representation, 
 the model is not very good at making decisions over long-term trends, but is quite good at predicting peaks and troughs.

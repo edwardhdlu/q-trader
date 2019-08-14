@@ -9,22 +9,22 @@ import random
 from collections import deque
 
 class Agent:
-	def __init__(self, state_size, is_eval=False, model_name=""):
+	def __init__(self, state_size, use_existing_model=False, model_name=""):
 		self.state_size    = state_size # normalized previous days
 		self.memory        = deque(maxlen=1000)
 		self.open_orders   = []
 		self.model_name    = model_name
-		self.is_eval       = is_eval
-
-		self.action_size   = 3 # hold(0), buy(1), sell(2)
+		self.is_eval       = use_existing_model
+		self.actions       = ['hold', 'buy', 'sell']
+		self.action_size   = len(self.actions)
 		self.gamma         = 0.95 #aka decay or discount rate, to calculate the future discounted reward.
 		self.epsilon       = 1.0  #aka exploration rate, this is the rate in which an agent randomly decides its action rather than prediction.
 		self.epsilon_min   = 0.01 #we want the agent to explore at least this amount.
-		self.epsilon_decay = 0.995#we want to decrease the number of explorations as it gets good at playing games.
+		self.epsilon_decay = 0.995#we want to decrease the number of explorations as it gets good at trading.
 
-		self.model         = load_model("files/output/" + model_name) if is_eval else self._model()
+		self.model         = load_model("files/output/" + model_name) if use_existing_model else self._build_net()
 
-	def _model(self):
+	def _build_net(self):
 		model = Sequential()
 		model.add(Dense(units=64		, activation="relu",  input_dim=self.state_size))
 		model.add(Dense(units=32		, activation="relu"))
@@ -33,7 +33,7 @@ class Agent:
 		model.compile  (loss="mse"      , optimizer=Adam(lr=0.001))
 		return model
 
-
+	#action is done by predict
 	def act(self, state):
 		if not self.is_eval and np.random.rand() <= self.epsilon:
 			random_action = random.randrange(self.action_size)
@@ -43,7 +43,7 @@ class Agent:
 		pred = np.argmax(pred_prob[0])
 		return pred
 
-
+	#fit model based on data x,y:  y=reward, x = state, action
 	def expReplay(self, batch_size):
 		mini_batch = []
 		l = len(self.memory)
