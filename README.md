@@ -32,7 +32,13 @@ The model uses t-day windows of close prices to determine if the best action to 
 
 
 As a result of the short-term state representation, 
-the model is not very good at making decisions over long-term trends, but is quite good at predicting peaks and troughs.
+the model is not very good at making decisions in long-term , but is quite good at predicting peaks and troughs.
+To make the model perform well in long-term, 
+we need to take into account not only the immediate rewards but also the future rewards we are going to get. 
+In order to do this, we are going to have a ‘discount rate’ or ‘gamma’. 
+This way the agent will learn to maximize the discounted future reward based on the given state.
+
+The loss is just a value that indicates how far our prediction is from the actual target
 We want to decrease this gap between the prediction and the target (loss). We will define our loss function as follows:
 
 ![rl](https://github.com/loliksamuel/py-ML-rl-trade/blob/master/files/output/loss.png)
