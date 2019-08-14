@@ -55,7 +55,7 @@ use_existing_model = True
 agent = Agent(window_size, use_existing_model, model_name)
 data = getStockDataVec(stock_name)
 l = len(data) - 1
-
+trading_fee=0
 agent.open_orders = []
 print(f'starting back-testing model {model_name} on {stock_name} (has {l} bars), window of {window_size} bars')
 bt()
