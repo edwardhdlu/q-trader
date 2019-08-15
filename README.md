@@ -4,7 +4,7 @@
 
 https://quantdare.com/deep-reinforcement-trading/
 
-[Deep Q network by deep mind](https://arxiv.org/pdf/1509.06461.pdf)
+[paper of Deep Q network by deep mind](https://arxiv.org/pdf/1509.06461.pdf)
 
 
 # Q-Trader
