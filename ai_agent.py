@@ -81,9 +81,10 @@ class Agent:
             print(f'warn!!! epsilon={self.epsilon} is too low. u may have to set epsilon_decay to 1')
 
 
-    def prepare_mem_batch(self, batch_size):
-        memory_batch = []
+    def prepare_mem_batch(self, mini_batch_size):
+        mini_batch = []
+        #mini_batch = random.sample(self.memory, batch_size)
         l = len(self.memory)
-        for i in range(l - batch_size + 1, l):
-            memory_batch.append(self.memory[i])
-        return memory_batch
+        for i in range(l - mini_batch_size + 1, l):
+            mini_batch.append(self.memory[i])
+        return mini_batch
