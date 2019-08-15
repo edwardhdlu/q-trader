@@ -18,7 +18,7 @@ def get_state(data, t, n):
 
 def get_reward(profit):
 
-	reward       = max(profit, 0)
+	reward       = max(profit, 0)#todo we should normalize profit
 	return reward
 
 

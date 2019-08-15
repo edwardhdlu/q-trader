@@ -48,9 +48,10 @@ class Agent:
         #print(f'best_action found by predicting={best_action}')
         return best_action
 
-        #fit model based on data x,y:  y=reward, x=state, action
-        #This training process makes the neural net to predict the action to do based on specific state.
-    def learn_with_exploration(self, batch_size):
+    #fit model based on data x,y:  y=reward, x=state, action
+    #This training process makes the neural net to predict the action to do based on specific state.
+    #using experience replay memory.
+    def experience_replay(self, batch_size):
         memory_batch = self.prepare_mem_batch(batch_size)
 
         for curr_state, action, reward, next_state, done in memory_batch:
@@ -59,15 +60,15 @@ class Agent:
             if not done:
                 # predict the future discounted reward
                 pred = self.model.predict(next_state)
-                y = reward + self.gamma * np.amax(pred[0])
+                target = reward + self.gamma * np.amax(pred[0])
             else:
-                y = reward
+                target = reward
 
             # make the agent to approximately map
             # the current state to future discounted reward
             # We'll call that y_f
             y_f = self.model.predict(curr_state)
-            y_f[0][action] = y
+            y_f[0][action] = target
             self.model.fit \
                 (curr_state
                  , y_f
@@ -80,7 +81,7 @@ class Agent:
         else:
             print(f'warn!!! epsilon={self.epsilon} is too low. u may have to set epsilon_decay to 1')
 
-
+    #increases learning speed with mini-batches
     def prepare_mem_batch(self, mini_batch_size):
         mini_batch = []
         #mini_batch = random.sample(self.memory, batch_size)
