@@ -17,8 +17,7 @@ def learn():
 
         for t in range(l):
 
-            action = agent.predict(state)
-
+            action = agent.act(state)
 
             if action == 1:  # buy
                 agent.open_orders.append(data[t])

@@ -37,12 +37,12 @@ class Agent:
         self.memory.append((state, action, reward, next_state, done))
 
 
-        #action is chosen by letting the model predict the action of current state based on the data you trained
-    def predict(self, state):
-        if not self.use_existing_model and np.random.rand() < self.epsilon:
+    #action is chosen by predicting and exploring : letting the model predict the action of current state based on the data you trained
+    def act(self, state):
+        if not self.use_existing_model and np.random.rand() < self.epsilon:#exploring
             random_action = random.randrange(self.action_size)
             return random_action
-
+        #predicting
         pred = self.model.predict(state)
         best_action = np.argmax(pred[0])
         #print(f'best_action found by predicting={best_action}')
@@ -84,7 +84,7 @@ class Agent:
     #increases learning speed with mini-batches
     def prepare_mem_batch(self, mini_batch_size):
         mini_batch = []
-        #mini_batch = random.sample(self.memory, batch_size)
+        #mini_batch = random.sample(self.memory, batch_size)#sample is not a good choice in timeseries data
         l = len(self.memory)
         for i in range(l - mini_batch_size + 1, l):
             mini_batch.append(self.memory[i])
