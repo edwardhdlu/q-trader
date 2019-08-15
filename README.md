@@ -6,7 +6,8 @@ https://quantdare.com/deep-reinforcement-trading/
 
 
 # Q-Trader
-As illustrated in below figure, model input :
+As illustrated in below figure, model DQN
+model input :
  1. historical stock data 
  2. historicsl market data 
  3. investment status, and reward 
