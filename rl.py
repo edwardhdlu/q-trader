@@ -1,65 +1,64 @@
+import time
+from datetime import datetime
+import market_env as env
 from ai_agent import Agent
 from utils import *
-import market_env as env
-from numpy import array
-import matplotlib.pyplot as plt
-from datetime import datetime
-import time
+
 
 def learn():
-	profit_vs_episode = []
-	trades_vs_episode = []
-	for e in range(episode_count + 1):
-		print("Episode " + str(e) + "/" + str(episode_count))
-		state = env.get_state(data, 0, window_size + 1)
-		print(f'state={state}')
-		total_profit = 0
-		trade_count = 0
-		agent.open_orders = []
+    profit_vs_episode = []
+    trades_vs_episode = []
+    for e in range(episode_count + 1):
+        print("Episode " + str(e) + "/" + str(episode_count))
+        state = env.get_state(data, 0, window_size + 1)
+        #print(f'state={state}')
+        total_profit = 0
+        trade_count = 0
+        agent.open_orders = []
 
-		for t in range(l):
+        for t in range(l):
 
-			action = agent.predict(state)
+            action = agent.predict(state)
 
 
-			if action == 1:  # buy
-				agent.open_orders.append(data[t])
-				print(f'row #{t} Buy  @ ' + formatPrice(data[t]))
-				reward = 0
-				trade_count += 1
+            if action == 1:  # buy
+                agent.open_orders.append(data[t])
+                #print(f'row #{t} Buy  @ ' + formatPrice(data[t]))
+                reward = 0
+                trade_count += 1
 
-			elif action == 2 and len(agent.open_orders) > 0:  # sell (or exiting trade)
+            elif action == 2 and len(agent.open_orders) > 0:  # sell (or exiting trade)
 
-				bought_price = agent.open_orders.pop(0)
-				profit = data[t] - bought_price
-				reward = env.get_reward(profit)
-				total_profit += profit
-				print(f'row #{t} Sell @ ' + formatPrice(data[t]) + " | Profit: " + formatPrice(profit))
-			else:# hold
-				#print (f'row #{t} Hold')
-				reward     = 0
+                bought_price = agent.open_orders.pop(0)
+                profit = data[t] - bought_price
+                reward = env.get_reward(profit)
+                total_profit += profit
+                #print(f'row #{t} Sell @ ' + formatPrice(data[t]) + " | Profit: " + formatPrice(profit))
+            else:# hold
+                #print (f'row #{t} Hold')
+                reward     = 0
 
-			done = True if t == l - 1 else False
-			next_state = env.get_state(data, t + 1, window_size + 1)
-			#print(f'next_state={next_state}')
-			agent.remember(state, action, reward, next_state, done)
-			state = next_state
+            done = True if t == l - 1 else False
+            next_state = env.get_state(data, t + 1, window_size + 1)
+            #print(f'next_state={next_state}')
+            agent.remember(state, action, reward, next_state, done)
+            state = next_state
 
-			if done:
-				print("---------------------------------------")
-				print(f'Total Profit: {formatPrice(total_profit)} , Total trades: {trade_count}')
-				print("---------------------------------------")
-				profit_vs_episode.append(total_profit)
-				trades_vs_episode.append(trade_count)
+            if done:
+                print("---------------------------------------")
+                print(f'Total Profit: {formatPrice(total_profit)} , Total trades: {trade_count}')
+                print("---------------------------------------")
+                profit_vs_episode.append(total_profit)
+                trades_vs_episode.append(trade_count)
 
-			if len(agent.memory) > batch_size:
-				agent.learn(batch_size)
+            if len(agent.memory) > batch_size:
+                agent.learn(batch_size)
 
-		if e % 10 == 0:
-			agent.model.save("files/output/model_ep" + str(e))
-			print(f'saved model at files/output/model_ep{str(e)}')
+        if e % 10 == 0:
+            agent.model.save("files/output/model_ep" + str(e))
+            print(f'saved model at files/output/model_ep{str(e)}')
 
-	return profit_vs_episode, trades_vs_episode
+    return profit_vs_episode, trades_vs_episode
 
 
 print('time is')
@@ -68,7 +67,7 @@ start_time = time.time()
 np.random.seed(7)
 stock_name    = '^GSPC_2011'#^GSPC  ^GSPC_2011
 window_size   = 10# (t) 10 days
-episode_count = 200# minimum 200 episodes for results. episode represent trade and learn on all data.
+episode_count = 100# minimum 200 episodes for results. episode represent trade and learn on all data.
 batch_size    = 15# learn  model every bar start from bar # batch_size
 use_existing_model = False
 agent         = Agent(window_size, use_existing_model, '')
