@@ -37,7 +37,7 @@ class Agent:
         self.memory.append((state, action, reward, next_state, done))
 
 
-    #action is chosen by predicting and exploring : letting the model predict the action of current state based on the data you trained
+    #best action is a tradeoff bw predicting based on past(exploitation) and by exploration randomly: letting the model predict the action of current state based on the data you trained
     def act(self, state):
         if not self.use_existing_model and np.random.rand() < self.epsilon:#exploring
             random_action = random.randrange(self.action_size)
@@ -60,6 +60,7 @@ class Agent:
             if not done:
                 # predict the future discounted reward
                 pred = self.model.predict(next_state)
+                #In plain English, it means maximum future reward for this state and action (s,a) is the immediate reward r plus maximum future reward for the next state
                 target = reward + self.gamma * np.amax(pred[0])
             else:
                 target = reward

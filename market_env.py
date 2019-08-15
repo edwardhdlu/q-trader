@@ -17,8 +17,8 @@ def get_state(data, t, n):
 	return np.array([res])
 
 def get_reward(profit):
-
-	reward       = max(profit, 0)#todo we should normalize profit
+	#todo follw DeepMind suggestion to clip the reward between [-1,+1](normalize) to improve the stability over other data
+	reward       = max(profit, 0)
 	return reward
 
 
