@@ -9,9 +9,8 @@ def learn():
     profit_vs_episode = []
     trades_vs_episode = []
     for e in range(episode_count + 1):
-        print("Episode " + str(e) + "/" + str(episode_count))
+        #print("Episode " + str(e) + "/" + str(episode_count))
         state = env.get_state(data, 0, window_size + 1)
-        #print(f'state={state}')
         total_profit = 0
         trade_count = 0
         agent.open_orders = []
@@ -46,7 +45,7 @@ def learn():
 
             if done:
                 print("---------------------------------------")
-                print(f'Total Profit: {formatPrice(total_profit)} , Total trades: {trade_count}')
+                print(f'Episode {e}/{episode_count} Total Profit: {formatPrice(total_profit)} , Total trades: {trade_count}, epsilon: {agent.epsilon}')
                 print("---------------------------------------")
                 profit_vs_episode.append(total_profit)
                 trades_vs_episode.append(trade_count)

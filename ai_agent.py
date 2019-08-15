@@ -20,7 +20,7 @@ class Agent:
         self.gamma         = 0.95 #aka decay or discount rate, determines the importance of future rewards.If=0 then agent will only learn to consider current rewards. if=1 it will make it strive for a long-term high reward.
         self.epsilon       = 1.0  #aka exploration rate, this is the rate in which an agent randomly decides its action rather than prediction.
         self.epsilon_min   = 0.01 #we want the agent to explore at least this amount.
-        self.epsilon_decay = 1#0.99995#we want to decrease the number of explorations as it gets good at trading.
+        self.epsilon_decay = 0.999995#we want to decrease the number of explorations as it gets good at trading.
 
         self.model         = load_model("files/output/" + model_name) if use_existing_model else self._build_net()
 
