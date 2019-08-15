@@ -50,7 +50,7 @@ class Agent:
 
         #fit model based on data x,y:  y=reward, x=state, action
         #This training process makes the neural net to predict the action to do based on specific state.
-    def learn(self, batch_size):
+    def learn_with_exploration(self, batch_size):
         memory_batch = self.prepare_mem_batch(batch_size)
 
         for curr_state, action, reward, next_state, done in memory_batch:

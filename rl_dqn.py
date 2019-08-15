@@ -51,7 +51,7 @@ def learn():
                 trades_vs_episode.append(trade_count)
 
             if len(agent.memory) > batch_size:
-                agent.learn(batch_size)
+                agent.learn_with_exploration(batch_size)
 
         if e % 10 == 0:
             agent.model.save("files/output/model_ep" + str(e))
