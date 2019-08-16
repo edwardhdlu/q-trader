@@ -19,22 +19,7 @@ def learn():
 
             action = agent.act(state)
 
-            if action == 1:  # buy
-                agent.open_orders.append(data[t])
-                #print(f'row #{t} Buy  @ ' + formatPrice(data[t]))
-                reward = 0
-                trade_count += 1
-
-            elif action == 2 and len(agent.open_orders) > 0:  # sell (or exiting trade)
-
-                bought_price = agent.open_orders.pop(0)
-                profit = data[t] - bought_price
-                reward = env.get_reward(profit)
-                total_profit += profit
-                print(f'row #{t} Sell @ ' + formatPrice(data[t]) + " | Profit: " + formatPrice(profit))
-            else:# hold
-                #print (f'row #{t} Hold')
-                reward     = 0
+            reward, total_profit, trade_count = execute_decision(action, t, total_profit, trade_count)
 
             done = True if t == l - 1 else False
             next_state = env.get_state(data, t + 1, window_size + 1)
@@ -57,6 +42,26 @@ def learn():
             print(f'saved model at files/output/model_ep{str(e)}')
 
     return profit_vs_episode, trades_vs_episode
+
+
+def execute_decision(action, t, total_profit, trade_count):
+    if action == 1:  # buy
+        agent.open_orders.append(data[t])
+        # print(f'row #{t} Buy  @ ' + formatPrice(data[t]))
+        reward = 0
+        trade_count += 1
+
+    elif action == 2 and len(agent.open_orders) > 0:  # sell (or exiting trade)
+
+        bought_price = agent.open_orders.pop(0)
+        profit = data[t] - bought_price
+        reward = env.get_reward(profit)
+        total_profit += profit
+        #print(f'row #{t} exit @ ' + formatPrice(data[t]) + " | Profit: " + formatPrice(profit))
+    else:  # hold
+        # print (f'row #{t} Hold')
+        reward = 0
+    return reward, total_profit, trade_count
 
 
 print('time is')
