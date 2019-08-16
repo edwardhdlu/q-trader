@@ -6,6 +6,9 @@ https://quantdare.com/deep-reinforcement-trading/
 
 [paper of Deep Q network by deep mind](https://arxiv.org/pdf/1509.06461.pdf)
 
+[tensor force_bitcoin_trader](https://github.com/lefnire/tforce_btc_trader)
+
+[gym_trading](https://github.com/AdrianP-/gym_trading)
 
 # Q-Trader
 As illustrated in below figure, model DQN
