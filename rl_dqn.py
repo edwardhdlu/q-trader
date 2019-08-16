@@ -14,15 +14,15 @@ def learn():
     for episode in range(episodes + 1):
         #print("Episode " + str(e) + "/" + str(episode_count))
         state = get_state(data, 0, window_size + 1)
-        total_profit = 0
-        trade_count = 0
+        total_profits = 0
+        total_trades  = 0
         agent.open_orders = []
 
         for t in range(l):
 
             action = agent.choose_best_action(state)#tradeoff bw predict and random
 
-            reward, total_profit, trade_count = execute_decision(action, t, total_profit, trade_count)
+            reward, total_profits, total_trades = execute_action (action, t, total_profits, total_trades)
 
             done = True if t == l - 1 else False
             next_state = get_state(data, t + 1, window_size + 1)
@@ -31,10 +31,10 @@ def learn():
             state = next_state
 
             if done:
-                print(f'Episode {episode}/{episodes} Total Profit: {formatPrice(total_profit)} , Total trades: {trade_count}, epsilon: {agent.epsilon}')
+                print(f'Episode {episode}/{episodes} Total Profit: {formatPrice(total_profits)} , Total trades: {total_trades}, epsilon: {agent.epsilon}')
                 print("---------------------------------------")
-                profit_vs_episode.append(total_profit)
-                trades_vs_episode.append(trade_count)
+                profit_vs_episode.append(total_profits)
+                trades_vs_episode.append(total_trades)
 
             if len(agent.memory) > batch_size:
                 agent.experience_replay(batch_size)#fit
@@ -46,7 +46,7 @@ def learn():
     return profit_vs_episode, trades_vs_episode
 
 
-def execute_decision(action, t, total_profits, total_trades):
+def execute_action(action, t, total_profits, total_trades):
     if action == 1:  # buy
         agent.open_orders.append(data[t])
         # print(f'row #{t} Buy  @ ' + formatPrice(data[t]))
