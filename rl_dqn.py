@@ -30,7 +30,6 @@ def learn():
             state = next_state
 
             if done:
-                print("---------------------------------------")
                 print(f'Episode {e}/{episode_count} Total Profit: {formatPrice(total_profit)} , Total trades: {trade_count}, epsilon: {agent.epsilon}')
                 print("---------------------------------------")
                 profit_vs_episode.append(total_profit)
@@ -46,24 +45,26 @@ def learn():
     return profit_vs_episode, trades_vs_episode
 
 
-def execute_decision(action, t, total_profit, trade_count):
+def execute_decision(action, t, total_profits, total_trades):
     if action == 1:  # buy
         agent.open_orders.append(data[t])
         # print(f'row #{t} Buy  @ ' + formatPrice(data[t]))
+        total_trades += 1
         reward = 0
-        trade_count += 1
+
 
     elif action == 2 and len(agent.open_orders) > 0:  # sell (or exiting trade)
 
         bought_price = agent.open_orders.pop(0)
         profit = data[t] - bought_price
-        reward = get_reward(profit)
-        total_profit += profit
+        total_profits += profit
+        reward = get_reward(profit, total_profits)
+
         #print(f'row #{t} exit @ ' + formatPrice(data[t]) + " | Profit: " + formatPrice(profit))
     else:  # hold
         # print (f'row #{t} Hold')
         reward = 0
-    return reward, total_profit, trade_count
+    return reward, total_profits, total_trades
 
 
 # returns an an n-day state representation ending at time t
@@ -76,9 +77,10 @@ def get_state(data, t, n):
 
     return np.array([res])
 
-def get_reward(profit):
+def get_reward(profit, total_profits):
     #todo follw DeepMind suggestion to clip the reward between [-1,+1](normalize) to improve the stability over other data
     reward       = max(profit, 0)
+    #reward      = total_profits
     return reward
 
 
@@ -87,7 +89,7 @@ def get_reward(profit):
 print('time is')
 print(datetime.now().strftime('%H:%M:%S'))
 start_time = time.time()
-np.random.seed(7)
+seed()
 stock_name    = '^GSPC_2011'#^GSPC  ^GSPC_2011
 window_size   = 10# (t) 10 days
 episode_count = 100# minimum 200 episodes for results. episode represent trade and learn on all data.
