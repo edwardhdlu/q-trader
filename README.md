@@ -70,14 +70,30 @@ Google, Inc, August 2017. Profit of $19.37.
 
 ## Running the Code on python 3.7
 
-1. download a training and test csv files from [Yahoo! Finance](https://ca.finance.yahoo.com/quote/%5EGSPC/history?p=%5EGSPC) into `files/input/`
+1. download data
 
-2. train model with minimum 200 episodes , and on all data (not just 2011) for good results(better use https://www.paperspace.com for GPU):
+1.1 training and test csv files from [Yahoo! Finance]
+
+1.2(https://ca.finance.yahoo.com/quote/%5EGSPC/history?p=%5EGSPC) into `files/input/`
+
+1.3 bring other features if u have
+
+2. train model. for good results run:
+
+2.1 with minimum 200 episodes 
+
+2.2 on all data (not just 2011) 
+
+2.3 with GPU  https://www.paperspace.com 
 ```
 python rl_dqn.py
 ```
 
-3. back-test last model created in files/output/ on any stock
+3. see 2 plots generated 
+3.1 profits over time
+3.2 trades over time
+
+4. back-test last model created in files/output/ on any stock
 ```
 python backtest.py
 ```
