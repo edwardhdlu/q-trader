@@ -61,7 +61,7 @@ class Agent:
                 # predict the future discounted reward
                 pred = self.model.predict(next_state)
                 #In plain English, it means maximum future reward for this state and action (s,a) is the immediate reward r plus maximum future reward for the next state
-                target = reward + self.gamma * np.amax(pred[0])
+                target = reward + self.gamma * np.amax(pred[0])#the bellman equation for discounted future rewards
             else:
                 target = reward
 

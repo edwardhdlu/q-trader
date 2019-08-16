@@ -41,7 +41,7 @@ def learn():
 
         if episode % 10 == 0:
             agent.model.save("files/output/model_ep" + str(episode))
-            print(f'saved model at files/output/model_ep{str(episode)}')
+            print(f'files/output/model_ep{str(episode)} saved')
 
     return profit_vs_episode, trades_vs_episode
 
@@ -68,14 +68,17 @@ def execute_action(action, t, total_profits, total_trades):
     return reward, total_profits, total_trades
 
 
-# returns an an n-day state representation ending at time t
+# returns an an n-day state representation ending at time t of difference bw close prices. ex. [0.5,0.5,0.5,0.4,0.3,0.2,0.5,0.4,0.3,0.2]
 def get_state(data, t, n):
     d = t - n + 1
     block = data[d:t + 1] if d >= 0 else -d * [data[0]] + data[0:t + 1] # pad with t0
     res = []
     for i in range(n - 1):
         res.append(sigmoid(block[i + 1] - block[i]))
-
+    #add features
+    #add tech. indicators
+    #add screen image
+    #add economic data
     return np.array([res])
 
 def get_reward(profit, total_profits):

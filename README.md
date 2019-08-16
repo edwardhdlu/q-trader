@@ -10,6 +10,8 @@ https://quantdare.com/deep-reinforcement-trading/
 
 [gym_trading](https://github.com/AdrianP-/gym_trading)
 
+[other python resources](https://github.com/topics/trading?l=python)
+
 # Q-Trader
 As illustrated in below figure, model DQN
 model input :

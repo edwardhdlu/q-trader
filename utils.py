@@ -22,9 +22,9 @@ def seed( seed=None):
 def getStockDataVec(key):
 	vec = []
 	lines = open("files/input/" + key + ".csv", "r").read().splitlines()
-
+	column_close_price=4
 	for line in lines[1:]:
-		vec.append(float(line.split(",")[4]))
+		vec.append(float(line.split(",")[column_close_price]))
 
 	return vec
 
