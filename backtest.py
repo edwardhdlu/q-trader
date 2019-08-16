@@ -16,7 +16,7 @@ def bt():
     reward       = 0
     for t in range(l):
 
-        action = agent.act(state)
+        action = agent.choose_best_action(state)
 
         if action == 1:  # buy
             agent.open_orders.append(data[t])

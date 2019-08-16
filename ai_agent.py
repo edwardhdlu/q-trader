@@ -38,7 +38,7 @@ class Agent:
 
 
     #best action is a tradeoff bw predicting based on past(exploitation) and by exploration randomly: letting the model predict the action of current state based on the data you trained
-    def act(self, state):
+    def choose_best_action(self, state):
         if not self.use_existing_model and np.random.rand() < self.epsilon:#exploring
             random_action = random.randrange(self.action_size)
             return random_action

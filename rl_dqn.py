@@ -1,8 +1,10 @@
 import time
 from datetime import datetime
-import market_env as env
+
 from ai_agent import Agent
 from utils import *
+import numpy as np
+
 
 
 def learn():
@@ -10,19 +12,19 @@ def learn():
     trades_vs_episode = []
     for e in range(episode_count + 1):
         #print("Episode " + str(e) + "/" + str(episode_count))
-        state = env.get_state(data, 0, window_size + 1)
+        state = get_state(data, 0, window_size + 1)
         total_profit = 0
         trade_count = 0
         agent.open_orders = []
 
         for t in range(l):
 
-            action = agent.act(state)
+            action = agent.choose_best_action(state)#tradeoff bw predict and random
 
             reward, total_profit, trade_count = execute_decision(action, t, total_profit, trade_count)
 
             done = True if t == l - 1 else False
-            next_state = env.get_state(data, t + 1, window_size + 1)
+            next_state = get_state(data, t + 1, window_size + 1)
             #print(f'next_state={next_state}')
             agent.remember(state, action, reward, next_state, done)
             state = next_state
@@ -55,13 +57,31 @@ def execute_decision(action, t, total_profit, trade_count):
 
         bought_price = agent.open_orders.pop(0)
         profit = data[t] - bought_price
-        reward = env.get_reward(profit)
+        reward = get_reward(profit)
         total_profit += profit
         #print(f'row #{t} exit @ ' + formatPrice(data[t]) + " | Profit: " + formatPrice(profit))
     else:  # hold
         # print (f'row #{t} Hold')
         reward = 0
     return reward, total_profit, trade_count
+
+
+# returns an an n-day state representation ending at time t
+def get_state(data, t, n):
+    d = t - n + 1
+    block = data[d:t + 1] if d >= 0 else -d * [data[0]] + data[0:t + 1] # pad with t0
+    res = []
+    for i in range(n - 1):
+        res.append(sigmoid(block[i + 1] - block[i]))
+
+    return np.array([res])
+
+def get_reward(profit):
+    #todo follw DeepMind suggestion to clip the reward between [-1,+1](normalize) to improve the stability over other data
+    reward       = max(profit, 0)
+    return reward
+
+
 
 
 print('time is')
