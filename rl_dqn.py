@@ -10,7 +10,8 @@ import numpy as np
 def learn():
     profit_vs_episode = []
     trades_vs_episode = []
-    for e in range(episode_count + 1):
+
+    for episode in range(episodes + 1):
         #print("Episode " + str(e) + "/" + str(episode_count))
         state = get_state(data, 0, window_size + 1)
         total_profit = 0
@@ -30,7 +31,7 @@ def learn():
             state = next_state
 
             if done:
-                print(f'Episode {e}/{episode_count} Total Profit: {formatPrice(total_profit)} , Total trades: {trade_count}, epsilon: {agent.epsilon}')
+                print(f'Episode {episode}/{episodes} Total Profit: {formatPrice(total_profit)} , Total trades: {trade_count}, epsilon: {agent.epsilon}')
                 print("---------------------------------------")
                 profit_vs_episode.append(total_profit)
                 trades_vs_episode.append(trade_count)
@@ -38,9 +39,9 @@ def learn():
             if len(agent.memory) > batch_size:
                 agent.experience_replay(batch_size)#fit
 
-        if e % 10 == 0:
-            agent.model.save("files/output/model_ep" + str(e))
-            print(f'saved model at files/output/model_ep{str(e)}')
+        if episode % 10 == 0:
+            agent.model.save("files/output/model_ep" + str(episode))
+            print(f'saved model at files/output/model_ep{str(episode)}')
 
     return profit_vs_episode, trades_vs_episode
 
@@ -80,7 +81,7 @@ def get_state(data, t, n):
 def get_reward(profit, total_profits):
     #todo follw DeepMind suggestion to clip the reward between [-1,+1](normalize) to improve the stability over other data
     reward       = max(profit, 0)
-    #reward      = total_profits
+    #reward      = total_profits#https://stats.stackexchange.com/questions/220508/q-learning-is-the-reward-cumulative-or-the-delta-between-the-previous-and-last/220552
     return reward
 
 
@@ -92,14 +93,14 @@ start_time = time.time()
 seed()
 stock_name    = '^GSPC_2011'#^GSPC  ^GSPC_2011
 window_size   = 10# (t) 10 days
-episode_count = 100# minimum 200 episodes for results. episode represent trade and learn on all data.
+episodes      = 100# minimum 200 episodes for results. episode represent trade and learn on all data.
 batch_size    = 15# learn  model every bar start from bar # batch_size
 use_existing_model = False
 agent         = Agent(window_size, use_existing_model, '')
 data          = getStockDataVec(stock_name)
 l             = len(data) - 1
 
-print(f'Running {episode_count} episodes, on {stock_name} has {l} bars, window of {window_size}, batch of {batch_size}')
+print(f'Running {episodes} episodes, on {stock_name} has {l} bars, window of {window_size}, batch of {batch_size}')
 profit_vs_episode, trades_vs_episode = learn()
 print(f'finished learning the model. now u can backtest the model created in files/output/ on any stock')
 print('python backtest.py ')
