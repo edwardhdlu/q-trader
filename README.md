@@ -76,22 +76,22 @@ Google, Inc, August 2017. Profit of $19.37.
 	- `conda` environments
 
 - Download data
- - training and test csv files from [Yahoo! Finance](https://ca.finance.yahoo.com/quote/%5EGSPC/history?p=%5EGSPC) 
- - put in `files/input/`
+	- training and test csv files from [Yahoo! Finance](https://ca.finance.yahoo.com/quote/%5EGSPC/history?p=%5EGSPC) 
+	- put in `files/input/`
 
 - Bring other features if u have
 
 - Train model. for good results run:
- - with minimum 200 episodes 
- - on all data (not just 2011) 
- - with GPU  https://www.paperspace.com 
+	- with minimum 200 episodes 
+	- on all data (not just 2011) 
+	- with GPU  https://www.paperspace.com 
 ```
 python rl_dqn.py
 ```
 
 - See 2 plots generated 
- - profits over time
- - trades over time
+	- profits over time
+	- trades over time
 
 - Back-test last model created in files/output/ on any stock
 ```
