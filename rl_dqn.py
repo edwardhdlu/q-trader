@@ -13,7 +13,7 @@ def learn():
 
     for episode in range(episodes + 1):
         #print("Episode " + str(e) + "/" + str(episode_count))
-        state = get_state(data, 0, window_size + 1)
+        state = get_state(data, 0, features + 1)
         total_profits = 0
         total_trades  = 0
         agent.open_orders = []
@@ -25,7 +25,7 @@ def learn():
             reward, total_profits, total_trades = execute_action (action, t, total_profits, total_trades)
 
             done = True if t == l - 1 else False
-            next_state = get_state(data, t + 1, window_size + 1)
+            next_state = get_state(data, t + 1, features + 1)
             #print(f'next_state={next_state}')
             agent.remember(state, action, reward, next_state, done)
             state = next_state
@@ -76,9 +76,11 @@ def get_state(data, t, n):
     for i in range(n - 1):
         res.append(sigmoid(block[i + 1] - block[i]))
     #add features
+    #add cyclic feature(sin, cos)
     #add tech. indicators
     #add screen image
     #add economic data
+    #https://towardsdatascience.com/feature-engineering-for-machine-learning-3a5e293a5114
     return np.array([res])
 
 def get_reward(profit, total_profits):
@@ -92,18 +94,21 @@ def get_reward(profit, total_profits):
 
 print('time is')
 print(datetime.now().strftime('%H:%M:%S'))
+np.set_printoptions(precision=4)
+np.set_printoptions(suppress=True) #prevent numpy exponential #notation on print, default False
+
 start_time = time.time()
 seed()
 stock_name    = '^GSPC_2011'#^GSPC  ^GSPC_2011
-window_size   = 10# (t) 10 days
+features      = 10# (t) 10 super simple features
 episodes      = 100# minimum 200 episodes for results. episode represent trade and learn on all data.
-batch_size    = 15# learn  model every bar start from bar # batch_size
+batch_size    = 15# learn  model on  batch_size
 use_existing_model = False
-agent         = Agent(window_size, use_existing_model, '')
+agent         = Agent(features, use_existing_model, '')
 data          = getStockDataVec(stock_name)
 l             = len(data) - 1
 
-print(f'Running {episodes} episodes, on {stock_name} has {l} bars, window of {window_size}, batch of {batch_size}')
+print(f'Running {episodes} episodes, on {stock_name} has {l} bars, window of {features}, batch of {batch_size}')
 profit_vs_episode, trades_vs_episode = learn()
 print(f'finished learning the model. now u can backtest the model created in files/output/ on any stock')
 print('python backtest.py ')
