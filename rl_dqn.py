@@ -13,7 +13,7 @@ def learn():
 
     for episode in range(episodes + 1):
         #print("Episode " + str(e) + "/" + str(episode_count))
-        state = get_state(data, 0, features + 1)
+        state = get_state(data, 0, window_size + 1)
         total_profits = 0
         total_trades  = 0
         agent.open_orders = []
@@ -25,7 +25,7 @@ def learn():
             reward, total_profits, total_trades = execute_action (action, t, total_profits, total_trades)
 
             done = True if t == l - 1 else False
-            next_state = get_state(data, t + 1, features + 1)
+            next_state = get_state(data, t + 1, window_size + 1)
             #print(f'next_state={next_state}')
             agent.remember(state, action, reward, next_state, done)#store contents of memory in buffer for future learning
             state = next_state
@@ -49,10 +49,9 @@ def learn():
 def execute_action(action, t, total_profits, total_trades):
     if action == 1:  # buy
         agent.open_orders.append(data[t])
-        # print(f'row #{t} Buy  @ ' + formatPrice(data[t]))
         total_trades += 1
         reward = 0
-
+        #print(f'row #{t} Buy  @ ' + formatPrice(data[t]))
 
     elif action == 2 and len(agent.open_orders) > 0:  # sell (or exiting trade)
 
@@ -60,11 +59,11 @@ def execute_action(action, t, total_profits, total_trades):
         profit = data[t] - bought_price
         total_profits += profit
         reward = get_reward(profit, total_profits)
-
         #print(f'row #{t} exit @ ' + formatPrice(data[t]) + " | Profit: " + formatPrice(profit))
+
     else:  # hold
-        # print (f'row #{t} Hold')
         reward = 0
+        # print (f'row #{t} Hold')
     return reward, total_profits, total_trades
 
 
@@ -84,7 +83,7 @@ def get_state(data, t, n):
     return np.array([res])
 
 def get_reward(profit, total_profits):
-    #todo follw DeepMind suggestion to clip the reward between [-1,+1](normalize) to improve the stability over other data
+    #todo follow DeepMind suggestion to clip the reward between [-1,+1](normalize) to improve the stability over other data
     reward       = max(profit, 0)
     #reward      = total_profits#https://stats.stackexchange.com/questions/220508/q-learning-is-the-reward-cumulative-or-the-delta-between-the-previous-and-last/220552
     return reward
@@ -100,15 +99,15 @@ np.set_printoptions(suppress=True) #prevent numpy exponential #notation on print
 start_time = time.time()
 seed()
 stock_name    = '^GSPC_2011'#^GSPC  ^GSPC_2011
-features      = 10# (t) 10 super simple features
+window_size   = 10# (t) 10 super simple features
 episodes      = 100# minimum 200 episodes for results. episode represent trade and learn on all data.
 batch_size    = 15# learn  model on  batch_size
 use_existing_model = False
-agent         = Agent(features, use_existing_model, '')
+agent         = Agent(window_size, use_existing_model, '')
 data          = getStockDataVec(stock_name)
 l             = len(data) - 1
 
-print(f'Running {episodes} episodes, on {stock_name} has {l} bars, window of {features}, batch of {batch_size}')
+print(f'Running {episodes} episodes, on {stock_name} has {l} bars, window of {window_size}, batch of {batch_size}')
 profit_vs_episode, trades_vs_episode = learn()
 print(f'finished learning the model. now u can backtest the model created in files/output/ on any stock')
 print('python backtest.py ')

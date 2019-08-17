@@ -19,7 +19,7 @@ class Agent:
         self.action_size   = len(self.actions)
         self.gamma         = 0.95 #aka decay or discount rate, determines the importance of future rewards.If=0 then agent will only learn to consider current rewards. if=1 it will make it strive for a long-term high reward.
         self.epsilon       = 1.0  #aka exploration rate, this is the rate in which an agent randomly decides its action rather than prediction.
-        self.epsilon_min   = 0.01 #we want the agent to explore at least this amount.
+        self.epsilon_min   = 0.1  #we want the agent to explore at least this amount.
         self.epsilon_decay = 0.999995#we want to decrease the number of explorations as it gets good at trading.
 
         self.model         = load_model("files/output/" + model_name) if use_existing_model else self._build_net()
@@ -39,14 +39,14 @@ class Agent:
 
     #best action is a tradeoff bw predicting based on past(exploitation) and by exploration randomly: letting the model predict the action of current state based on the data you trained
     def choose_best_action(self, state):
-        if not self.use_existing_model:
-            if np.random.rand() < self.epsilon:#exploring from time to time
+        #exploring from time to time
+        if self.use_existing_model == False and np.random.rand() < self.epsilon:
                 random_action = random.randrange(self.action_size)
                 return random_action
-        #predicting
+        #exploiting = predicting
         pred = self.model.predict(state)
         best_action = np.argmax(pred[0])
-        #print(f'best_action found by predicting={best_action}')
+        #print(f'best_action found by predicting={self.actions[best_action]}')
         return best_action
 
     #fit model based on data x,y:  y=reward, x=state, action
@@ -81,7 +81,7 @@ class Agent:
             self.epsilon *= self.epsilon_decay
         #print(f'epsilon={self.epsilon}')
         else:
-            print(f'warn!!! epsilon={self.epsilon} is too low. u may have to set epsilon_decay to 1')
+            print(f'warn!!! epsilon={self.epsilon} is too low. agent will exploit too much and not explore. u may have to increase epsilon_decay up to 1')
 
     #increases learning speed with mini-batches
     def prepare_mem_batch(self, mini_batch_size):
