@@ -1,4 +1,4 @@
-## References
+# References
 
 [Deep Q-Learning with Keras and Gym](https://keon.io/deep-q-learning/) - balance CartPole game with Q-learning
 
@@ -14,11 +14,7 @@ https://quantdare.com/deep-reinforcement-trading/
 
 [other python resources](https://github.com/topics/trading?l=python)
 
-#Environment
- market env is essentially a time-series data-frame (RNNs work well with time-series data)
- there is a zero-market impact hypothesis, which essentially
- states that the agent’s action can never be significant enough to affect the market env.
- 
+
 # Q-Trader agent
 As illustrated in below figure, model DQN
 model input :
@@ -34,6 +30,12 @@ model output(action prediction):
 
 ![nn](https://github.com/loliksamuel/py-ML-rl-trade/blob/master/files/output/nn.png)
 
+# Environment
+ market env is essentially a time-series data-frame (RNNs work well with time-series data)
+ there is a zero-market impact hypothesis, which essentially
+ states that the agent’s action can never be significant enough to affect the market env.
+ 
+ 
 The policy network outputs an action daily 
 the market returns the rewards of such actions (the profit)
 and all this data ( status,   amount of money gain or lost), sent to policy network to train
@@ -41,14 +43,19 @@ and all this data ( status,   amount of money gain or lost), sent to policy netw
 ![rl](https://github.com/loliksamuel/py-ML-rl-trade/blob/master/files/output/rl.png)
 
 
-## Features
+# Features
 
 this Q-learning implementation applied to (short-term) stock trading. 
 The model uses t-day windows of close prices as features 
 to determine if the best action to take at a given time is to buy, sell or hold.
 
 
-## Reward
+# Reward
+
+Reward shaping is a technique inspired by animal training where supplemental rewards are provided to make a problem easier to learn. 
+There is usually an obvious natural reward for any problem. 
+For games, this is usually a win or loss. For financial problems, 
+the reward is usually profit. Reward shaping augments the natural reward signal by adding additional rewards for making progress toward a good solution.
 
 learning is based on immediate and long-term reward
 To make the model perform well in long-term, 
@@ -67,7 +74,7 @@ We want to decrease this gap between the prediction and the target (loss). We wi
 ![rl](https://github.com/loliksamuel/py-ML-rl-trade/blob/master/files/output/loss.png)
 
 the model get updated every few days.
-## Results
+# Results
 
 Some examples of results on test sets:
 
@@ -83,7 +90,7 @@ Apple, Inc, 2016. Profit of $162.73.
 ![GOOG_8_2017](https://github.com/edwardhdlu/q-trader/blob/master/images/GOOG_8_2017.png)
 Google, Inc, August 2017. Profit of $19.37.
 
-## Running the Code on python 3.7
+# How to Run
 
 - Install python 3.7
 	- Anaconda, Python, IPython, and Jupyter notebooks
