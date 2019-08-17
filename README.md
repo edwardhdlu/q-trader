@@ -68,10 +68,11 @@ This way the agent will learn to maximize the discounted future reward based on 
 
 the model is not very good at making decisions in long-term , but is quite good at predicting peaks and troughs.
 
-The loss is just a value that indicates how far our prediction is from the actual target
-We want to decrease this gap between the prediction and the target (loss). We will define our loss function as follows:
-
-![rl](https://github.com/loliksamuel/py-ML-rl-trade/blob/master/files/output/loss.png)
+we use TD method: In plain English, 
+it means maximum future reward for this state and action (s,a) 
+is the immediate reward r plus maximum future reward for the next state
+                 
+![max future reward](https://github.com/loliksamuel/py-ML-rl-trade/blob/master/files/output/max_future_reward.png)
 
 the model get updated every few days.
 # Results
