@@ -27,7 +27,7 @@ def learn():
             done = True if t == l - 1 else False
             next_state = get_state(data, t + 1, features + 1)
             #print(f'next_state={next_state}')
-            agent.remember(state, action, reward, next_state, done)
+            agent.remember(state, action, reward, next_state, done)#store contents of memory in buffer for future learning
             state = next_state
 
             if done:
@@ -36,9 +36,9 @@ def learn():
                 profit_vs_episode.append(total_profits)
                 trades_vs_episode.append(total_trades)
 
-            if len(agent.memory) > batch_size:
+            if len(agent.memory) > batch_size:#if memory of agent gets full:
                 agent.experience_replay(batch_size)#fit
-
+            #clean memory ?
         if episode % 10 == 0:
             agent.model.save("files/output/model_ep" + str(episode))
             print(f'files/output/model_ep{str(episode)} saved')
