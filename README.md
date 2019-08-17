@@ -1,6 +1,6 @@
 ## References
 
-[Deep Q-Learning with Keras and Gym](https://keon.io/deep-q-learning/) - Q-learning overview and Agent skeleton code
+[Deep Q-Learning with Keras and Gym](https://keon.io/deep-q-learning/) - balance CartPole game with Q-learning
 
 https://quantdare.com/deep-reinforcement-trading/
 
