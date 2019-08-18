@@ -16,7 +16,7 @@ https://quantdare.com/deep-reinforcement-trading/
 
 
 # Q-Trader agent
-As illustrated in below figure, model DQN
+As illustrated in below figure, model DQN is a value network that will give probability of best action
 model input :
  1. historical stock data 
  2. historicsl market data 
@@ -26,9 +26,17 @@ model output(action prediction):
 1. hold
 2. buy
 3. sell
+
+# Action
+there are 3 possible actions that the agent can take, hold, buy, sell
  
+# State
+State : Current situation returned by the environment.
 
 ![nn](https://github.com/loliksamuel/py-ML-rl-trade/blob/master/files/output/nn.png)
+
+# Policy
+The strategy that the agent employs to determine next action based on the current state(we r nit using it)
 
 # Environment
  market env is essentially a time-series data-frame (RNNs work well with time-series data)
@@ -68,8 +76,10 @@ This way the agent will learn to maximize the discounted future reward based on 
 
 the model is not very good at making decisions in long-term , but is quite good at predicting peaks and troughs.
 
-we use TD method: In plain English, 
-it means maximum future reward for this state and action (s,a) 
+# Value
+we use TD method to calculate value (probability of action): 
+TD In plain English, 
+ means maximum future reward for this state and action (s,a) 
 is the immediate reward r plus maximum future reward for the next state
                  
 ![max future reward](https://github.com/loliksamuel/py-ML-rl-trade/blob/master/files/output/max_future_reward.png)
