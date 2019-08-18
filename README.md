@@ -15,8 +15,8 @@ https://quantdare.com/deep-reinforcement-trading/
 [other python resources](https://github.com/topics/trading?l=python)
 
 
-# Q-Trader agent
-As illustrated in below figure, model DQN
+# value netork (ai_agent.py)
+As illustrated in below figure, model DQN is a value network that will give probability of best action
 model input :
  1. historical stock data 
  2. historicsl market data 
@@ -26,15 +26,16 @@ model output(action prediction):
 1. hold
 2. buy
 3. sell
- 
-the model get updated every few days. 
+
 
 ![nn](https://github.com/loliksamuel/py-ML-rl-trade/blob/master/files/output/nn.png)
 
+
+# Policy network
+a model that cooses The strategy (for bear/bull/counter trend market) that the agent employs to determine next action based on the current state(we r not using it)
+
 # Environment
  market env is essentially a time-series data-frame (RNNs work well with time-series data)
- there is a zero-market impact hypothesis, which essentially
- states that the agent’s action can never be significant enough to affect the market env.
  
  
 The policy network outputs an action daily 
@@ -43,6 +44,13 @@ and all this data ( status,   amount of money gain or lost), sent to policy netw
  
 ![rl](https://github.com/loliksamuel/py-ML-rl-trade/blob/master/files/output/rl.png)
 
+# Action
+there are 3 possible actions that the agent can take, hold, buy, sell
+there is a zero-market impact hypothesis, which essentially
+states that the agent’s action can never be significant enough to affect the market env.
+  
+# State
+State : Current situation returned by the environment.
 
 # Features
 
@@ -69,13 +77,15 @@ This way the agent will learn to maximize the discounted future reward based on 
 
 the model is not very good at making decisions in long-term , but is quite good at predicting peaks and troughs.
 
-we use TD method: In plain English, 
-it means maximum future reward for this state and action (s,a) 
+# Value
+we use TD method to calculate value (probability of action): 
+TD In plain English, 
+ means maximum future reward for this state and action (s,a) 
 is the immediate reward r plus maximum future reward for the next state
                  
 ![max future reward](https://github.com/loliksamuel/py-ML-rl-trade/blob/master/files/output/max_future_reward.png)
 
-
+the model get updated every few days.
 # Results
 
 Some examples of results on test sets:
