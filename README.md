@@ -36,8 +36,6 @@ a model that cooses The strategy (for bear/bull/counter trend market) that the a
 
 # Environment
  market env is essentially a time-series data-frame (RNNs work well with time-series data)
- there is a zero-market impact hypothesis, which essentially
- states that the agent’s action can never be significant enough to affect the market env.
  
  
 The policy network outputs an action daily 
@@ -48,10 +46,11 @@ and all this data ( status,   amount of money gain or lost), sent to policy netw
 
 # Action
 there are 3 possible actions that the agent can take, hold, buy, sell
- 
+there is a zero-market impact hypothesis, which essentially
+states that the agent’s action can never be significant enough to affect the market env.
+  
 # State
 State : Current situation returned by the environment.
-
 
 # Features
 
