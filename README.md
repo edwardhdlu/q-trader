@@ -27,13 +27,9 @@ model output(action prediction):
 2. buy
 3. sell
 
-# Action
-there are 3 possible actions that the agent can take, hold, buy, sell
- 
-# State
-State : Current situation returned by the environment.
 
 ![nn](https://github.com/loliksamuel/py-ML-rl-trade/blob/master/files/output/nn.png)
+
 
 # Policy
 The strategy that the agent employs to determine next action based on the current state(we r nit using it)
@@ -49,6 +45,12 @@ the market returns the rewards of such actions (the profit)
 and all this data ( status,   amount of money gain or lost), sent to policy network to train
  
 ![rl](https://github.com/loliksamuel/py-ML-rl-trade/blob/master/files/output/rl.png)
+
+# Action
+there are 3 possible actions that the agent can take, hold, buy, sell
+ 
+# State
+State : Current situation returned by the environment.
 
 
 # Features
