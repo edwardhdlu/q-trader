@@ -8,21 +8,23 @@ import numpy as np
 
 
 def learn():
-    profit_vs_episode = []
-    trades_vs_episode = []
+    rewards_vs_episode = []
+    profit_vs_episode  = []
+    trades_vs_episode  = []
 
     for episode in range(episodes + 1):
         #print("Episode " + str(e) + "/" + str(episode_count))
         state = get_state(data, 0, window_size + 1)
         total_profits = 0
         total_trades  = 0
+        total_rewards = 0
         agent.open_orders = []
 
         for t in range(l):
 
             action = agent.choose_best_action(state)#tradeoff bw predict and random
 
-            reward, total_profits, total_trades = execute_action (action, t, total_profits, total_trades)
+            reward, total_rewards, total_profits, total_trades = execute_action (action, t, total_rewards, total_profits, total_trades)
 
             done = True if t == l - 1 else False
             next_state = get_state(data, t + 1, window_size + 1)
@@ -33,6 +35,7 @@ def learn():
             if done:
                 print(f'Episode {episode}/{episodes} Total Profit: {formatPrice(total_profits)} , Total trades: {total_trades}, epsilon: {agent.epsilon}')
                 print("---------------------------------------")
+                rewards_vs_episode.append(total_rewards)
                 profit_vs_episode.append(total_profits)
                 trades_vs_episode.append(total_trades)
 
@@ -43,10 +46,10 @@ def learn():
             agent.model.save("files/output/model_ep" + str(episode))
             print(f'files/output/model_ep{str(episode)} saved')
 
-    return profit_vs_episode, trades_vs_episode
+    return rewards_vs_episode, profit_vs_episode, trades_vs_episode
 
 
-def execute_action(action, t, total_profits, total_trades):
+def execute_action(action, t, total_rewards, total_profits, total_trades):
     if action == 1:  # buy
         agent.open_orders.append(data[t])
         total_trades += 1
@@ -59,12 +62,14 @@ def execute_action(action, t, total_profits, total_trades):
         profit = data[t] - bought_price
         total_profits += profit
         reward = get_reward(profit, total_profits)
+
         #print(f'row #{t} exit @ ' + formatPrice(data[t]) + " | Profit: " + formatPrice(profit))
 
     else:  # hold
         reward = 0
         # print (f'row #{t} Hold')
-    return reward, total_profits, total_trades
+    total_rewards += reward
+    return reward, total_rewards, total_profits, total_trades
 
 
 # returns an an n-day state representation ending at time t of difference bw close prices. ex. [0.5,0.5,0.5,0.4,0.3,0.2,0.5,0.4,0.3,0.2]
@@ -100,17 +105,21 @@ start_time = time.time()
 seed()
 stock_name    = '^GSPC_2011'#^GSPC  ^GSPC_2011
 window_size   = 10# (t) 10 super simple features
-episodes      = 100# minimum 200 episodes for results. episode represent trade and learn on all data.
-batch_size    = 15# learn  model on  batch_size
+episodes      = 2# minimum 200 episodes for results. episode represent trade and learn on all data.
+batch_size    = 15#  (int) size of a batched sampled from replay buffer for training
 use_existing_model = False
 agent         = Agent(window_size, use_existing_model, '')
 data          = getStockDataVec(stock_name)
 l             = len(data) - 1
 
 print(f'Running {episodes} episodes, on {stock_name} has {l} bars, window of {window_size}, batch of {batch_size}')
-profit_vs_episode, trades_vs_episode = learn()
+rewards_vs_episode, profit_vs_episode, trades_vs_episode = learn()
 print(f'finished learning the model. now u can backtest the model created in files/output/ on any stock')
 print('python backtest.py ')
+
+##print(f'see plot of rewards_vs_episode = {rewards_vs_episode}')
+#plot_barchart(rewards_vs_episode	  ,  "reward per episode" ,  "total reward", "episode", 'red')
+
 
 print(f'see plot of profit_vs_episode = {profit_vs_episode}')
 plot_barchart(profit_vs_episode	  ,  "profit per episode" ,  "total profit", "episode", 'green')

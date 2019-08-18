@@ -27,6 +27,7 @@ model output(action prediction):
 2. buy
 3. sell
  
+the model get updated every few days. 
 
 ![nn](https://github.com/loliksamuel/py-ML-rl-trade/blob/master/files/output/nn.png)
 
@@ -74,7 +75,7 @@ is the immediate reward r plus maximum future reward for the next state
                  
 ![max future reward](https://github.com/loliksamuel/py-ML-rl-trade/blob/master/files/output/max_future_reward.png)
 
-the model get updated every few days.
+
 # Results
 
 Some examples of results on test sets:
