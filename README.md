@@ -15,7 +15,7 @@ https://quantdare.com/deep-reinforcement-trading/
 [other python resources](https://github.com/topics/trading?l=python)
 
 
-# Q-Trader agent
+# value netork (ai_agent.py)
 As illustrated in below figure, model DQN is a value network that will give probability of best action
 model input :
  1. historical stock data 
@@ -31,8 +31,8 @@ model output(action prediction):
 ![nn](https://github.com/loliksamuel/py-ML-rl-trade/blob/master/files/output/nn.png)
 
 
-# Policy
-The strategy that the agent employs to determine next action based on the current state(we r nit using it)
+# Policy network
+a model that cooses The strategy (for bear/bull/counter trend market) that the agent employs to determine next action based on the current state(we r not using it)
 
 # Environment
  market env is essentially a time-series data-frame (RNNs work well with time-series data)
