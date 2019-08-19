@@ -12,7 +12,13 @@ https://quantdare.com/deep-reinforcement-trading/
 
 [gym_trading](https://github.com/AdrianP-/gym_trading)
 
+[stable-baselines](https://stable-baselines.readthedocs.io/en/master/guide/quickstart.html)
+
 [other python resources](https://github.com/topics/trading?l=python)
+
+# Data
+from https://finance.yahoo.com/quote/%5EGSPC?p=^GSPC
+or from https://www.kaggle.com/janiobachmann/s-p-500-time-series-forecasting-with-prophet/data
 
 
 # value netork (ai_agent.py)
