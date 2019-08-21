@@ -102,7 +102,7 @@ start_time = time.time()
 seed()
 stock_name    = '^GSPC2001_2010'#^GSPC2001_2010   ^GSPC_2011
 window_size   = 252# (t)   super simple features
-episodes      = 2# minimum 200 episodes for results. episode represent trade and learn on all data.
+episodes      = 200# minimum 200 episodes for results. episode represent trade and learn on all data.
 batch_size    = 15#  (int) size of a batched sampled from replay buffer for training
 use_existing_model = False
 agent         = Agent(window_size, use_existing_model, '')
