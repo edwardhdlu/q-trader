@@ -1,3 +1,22 @@
+# References
+
+[Deep Q-Learning with Keras and Gym](https://keon.io/deep-q-learning/) - balance CartPole game with Q-learning
+
+https://quantdare.com/deep-reinforcement-trading/
+
+[paper of Deep Q network by deep mind](https://arxiv.org/pdf/1509.06461.pdf)
+
+[paper Capturing Financial markets to apply Deep RL](https://arxiv.org/pdf/1907.04373.pdf)
+
+[tensor force_bitcoin_trader](https://github.com/lefnire/tforce_btc_trader)
+
+[gym_trading](https://github.com/AdrianP-/gym_trading)
+
+[other python resources](https://github.com/topics/trading?l=python)
+
+# Data
+from https://finance.yahoo.com/quote/%5EGSPC?p=^GSPC
+or from https://www.kaggle.com/janiobachmann/s-p-500-time-series-forecasting-with-prophet/data
 
 
 # value netork (ai_agent.py)
@@ -116,23 +135,4 @@ python rl_dqn.py
 ```
 python backtest.py
 ```
-
-# References
-
-[Deep Q-Learning with Keras and Gym](https://keon.io/deep-q-learning/) - balance CartPole game with Q-learning
-
-https://quantdare.com/deep-reinforcement-trading/
-
-[paper of Deep Q network by deep mind](https://arxiv.org/pdf/1509.06461.pdf)
-
-[paper Capturing Financial markets to apply Deep RL](https://arxiv.org/pdf/1907.04373.pdf)
-
-[tensor force_bitcoin_trader](https://github.com/lefnire/tforce_btc_trader)
-
-[gym_trading](https://github.com/AdrianP-/gym_trading)
-
-[datahack](https://dagshub.com/Datahack/DataHack-Resources-2019/)
-
-[other python resources](https://github.com/topics/trading?l=python)
-
 
