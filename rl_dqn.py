@@ -93,16 +93,16 @@ def get_state(data, t, n):
 
 
 
-print('time is')
+print('time is') #episodes=2 +window=252 takes 354 sec
 print(datetime.now().strftime('%H:%M:%S'))
 np.set_printoptions(precision=4)
 np.set_printoptions(suppress=True) #prevent numpy exponential #notation on print, default False
 
 start_time = time.time()
 seed()
-stock_name    = '^GSPC'#^GSPC  ^GSPC_2011
-window_size   = 100# (t) 10 super simple features
-episodes      = 100# minimum 200 episodes for results. episode represent trade and learn on all data. episodes=2 +window=100 takes 354 sec
+stock_name    = '^GSPC2001_2010'#^GSPC2001_2010   ^GSPC_2011
+window_size   = 252# (t)   super simple features
+episodes      = 2# minimum 200 episodes for results. episode represent trade and learn on all data.
 batch_size    = 15#  (int) size of a batched sampled from replay buffer for training
 use_existing_model = False
 agent         = Agent(window_size, use_existing_model, '')
