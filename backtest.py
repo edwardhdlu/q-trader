@@ -3,14 +3,14 @@ from keras.models import load_model
 from ai_agent import Agent
 from utils import *
 import sys
-import market_env as env
+
 
 
 
 
 
 def bt():
-    state = env.get_state(data, 0, window_size + 1)
+    state = get_state(data, 0, window_size + 1)
     total_profit = 0
     trade_count  = 0
     reward       = 0
@@ -35,7 +35,7 @@ def bt():
             reward     = 0
 
         done = True if t == l - 1 else False
-        next_state = env.get_state(data, t + 1, window_size + 1)
+        next_state = get_state(data, t + 1, window_size + 1)
         agent.remember(state, action, reward, next_state, done)
         state = next_state
 
@@ -46,10 +46,27 @@ def bt():
 
 
 
+# returns an an n-day state representation ending at time t of difference bw close prices. ex. [0.5,0.5,0.5,0.4,0.3,0.2,0.5,0.4,0.3,0.2]
+def get_state(data, t, n):
+    d = t - n + 1
+    block = data[d:t + 1] if d >= 0 else -d * [data[0]] + data[0:t + 1] # pad with t0
+    res = []
+    for i in range(n - 1):
+        #res.append(sigmoid(block[i + 1] - block[i]))
+        res.append(np.log(block[i + 1] / block[i]))
+        #res.append(np.log(block[i + 1])-np.log(block[i]))
+    #add features
+    #add cyclic feature(sin, cos)
+    #add tech. indicators
+    #add screen image
+    #add economic data
+    #https://towardsdatascience.com/feature-engineering-for-machine-learning-3a5e293a5114
+    return np.array([res])
+
 
 
 stock_name    = '^GSPC_2011'#^GSPC  ^GSPC_2011
-model_name    = 'model_ep20'#model_ep0, model_ep10, model_ep20, model_ep30
+model_name    = 'model_ep0'#model_ep0, model_ep10, model_ep20, model_ep30
 model         = load_model("files/output/" + model_name)
 window_size   = model.layers[0].input.shape.as_list()[1]
 use_existing_model = True
