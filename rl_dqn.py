@@ -59,11 +59,11 @@ def execute_action(action, t, total_rewards, total_profits, total_trades):
     elif action == 2 and len(agent.open_orders) > 0:  # sell (or exiting trade)
 
         bought_price = agent.open_orders.pop(0)
-        profit = data[t] - bought_price
-        total_profits += profit
-        reward = get_reward(profit, total_profits)
-
-        #print(f'row #{t} exit @ ' + formatPrice(data[t]) + " | Profit: " + formatPrice(profit))
+        return_rate = data[t] / bought_price
+        log_return = np.log(return_rate)#for normal distribution
+        total_profits += log_return
+        reward = log_return#get_reward(return_rate, total_profits)
+        #print(f'row #{t} exit @ ' + formatPrice(data[t]) + " | return_rate: " + formatPrice(return_rate))
 
     else:  # hold
         reward = 0
@@ -78,7 +78,9 @@ def get_state(data, t, n):
     block = data[d:t + 1] if d >= 0 else -d * [data[0]] + data[0:t + 1] # pad with t0
     res = []
     for i in range(n - 1):
-        res.append(sigmoid(block[i + 1] - block[i]))
+        #res.append(sigmoid(block[i + 1] - block[i]))
+        res.append(np.log(block[i + 1] / block[i]))
+        #res.append(np.log(block[i + 1])-np.log(block[i]))
     #add features
     #add cyclic feature(sin, cos)
     #add tech. indicators
@@ -87,11 +89,6 @@ def get_state(data, t, n):
     #https://towardsdatascience.com/feature-engineering-for-machine-learning-3a5e293a5114
     return np.array([res])
 
-def get_reward(profit, total_profits):
-    #todo follow DeepMind suggestion to clip the reward between [-1,+1](normalize) to improve the stability over other data
-    reward       = max(profit, 0)
-    #reward      = total_profits#https://stats.stackexchange.com/questions/220508/q-learning-is-the-reward-cumulative-or-the-delta-between-the-previous-and-last/220552
-    return reward
 
 
 
@@ -103,13 +100,13 @@ np.set_printoptions(suppress=True) #prevent numpy exponential #notation on print
 
 start_time = time.time()
 seed()
-stock_name    = '^GSPC_2011'#^GSPC  ^GSPC_2011
-window_size   = 10# (t) 10 super simple features
-episodes      = 2# minimum 200 episodes for results. episode represent trade and learn on all data.
+stock_name    = '^GSPC'#^GSPC  ^GSPC_2011
+window_size   = 100# (t) 10 super simple features
+episodes      = 100# minimum 200 episodes for results. episode represent trade and learn on all data. episodes=2 +window=100 takes 354 sec
 batch_size    = 15#  (int) size of a batched sampled from replay buffer for training
 use_existing_model = False
 agent         = Agent(window_size, use_existing_model, '')
-data          = getStockDataVec(stock_name)
+data          = getStockDataVec(stock_name)#https://www.kaggle.com/camnugent/sandp500
 l             = len(data) - 1
 
 print(f'Running {episodes} episodes, on {stock_name} has {l} bars, window of {window_size}, batch of {batch_size}')

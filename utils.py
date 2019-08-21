@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 # prints formatted price
 def formatPrice(n):
-	return ("-$" if n < 0 else " $") + "{0:.2f}".format(abs(n))
+	return ("-%" if n < 0 else " %") + "{0:.3f}".format(abs(n))
 
 # returns the sigmoid
 def sigmoid(x):
