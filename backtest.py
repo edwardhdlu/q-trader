@@ -69,7 +69,7 @@ def get_state(data, t, n):
 
 
 
-stock_name    = '^GSPC_2019'#^GSPC  ^GSPC_2011
+stock_name    = '^GSPC_2011'#^GSPC  ^GSPC_2011
 model_name    = 'model_ep0'#model_ep0, model_ep10, model_ep20, model_ep30
 model         = load_model("files/output/" + model_name)
 window_size   = model.layers[0].input.shape.as_list()[1]
