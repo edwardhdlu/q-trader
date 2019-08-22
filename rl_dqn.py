@@ -100,7 +100,7 @@ np.set_printoptions(suppress=True) #prevent numpy exponential #notation on print
 
 start_time = time.time()
 seed()
-stock_name    = '^GSPC2001_2010'#^GSPC2001_2010   ^GSPC_2011
+stock_name    = '^GSPC_1970_2018'#^GSPC_2001_2010  ^GSPC_1970_2018  ^GSPC_2011
 window_size   = 252# (t)   super simple features
 episodes      = 200# minimum 200 episodes for results. episode represent trade and learn on all data.
 batch_size    = 15#  (int) size of a batched sampled from replay buffer for training

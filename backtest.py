@@ -26,10 +26,14 @@ def bt():
 
         elif action == 2 and len(agent.open_orders) > 0:  # sell
             bought_price = agent.open_orders.pop(0)
-            reward = max(data[t] - bought_price, 0)
-            profit = data[t] - bought_price
-            total_profit += profit - trading_fee
-            print("Sell @ " + formatPrice(data[t]) + " | Profit: " + formatPrice(profit))
+
+
+            return_rate = data[t] / bought_price
+            log_return = np.log(return_rate)#for normal distribution
+            reward = log_return#max(data[t] - bought_price, 0)
+
+            total_profit += log_return - trading_fee
+            print("Sell @ " + formatPrice(data[t]) + " | Profit: " + formatPrice(log_return))
         else:# hold
             #print ('Hold')
             reward     = 0
@@ -65,7 +69,7 @@ def get_state(data, t, n):
 
 
 
-stock_name    = '^GSPC_2011'#^GSPC  ^GSPC_2011
+stock_name    = '^GSPC_2019'#^GSPC  ^GSPC_2011
 model_name    = 'model_ep0'#model_ep0, model_ep10, model_ep20, model_ep30
 model         = load_model("files/output/" + model_name)
 window_size   = model.layers[0].input.shape.as_list()[1]
