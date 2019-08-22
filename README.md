@@ -75,21 +75,6 @@ is the immediate reward r plus maximum future reward for the next state
 ![max future reward](https://github.com/loliksamuel/py-ML-rl-trade/blob/master/files/output/max_future_reward.png)
 
 the model get updated every few days.
-# Results
-
-Some examples of results on test sets:
-
-![^GSPC 2015](https://github.com/edwardhdlu/q-trader/blob/master/images/^GSPC_2015.png)
-S&P 500, 2015. Profit of $431.04.
-
-![BABA_2015](https://github.com/edwardhdlu/q-trader/blob/master/images/BABA_2015.png)
-Alibaba Group Holding Ltd, 2015. Loss of $351.59.
-
-![AAPL 2016](https://github.com/edwardhdlu/q-trader/blob/master/images/AAPL_2016.png)
-Apple, Inc, 2016. Profit of $162.73.
-
-![GOOG_8_2017](https://github.com/edwardhdlu/q-trader/blob/master/images/GOOG_8_2017.png)
-Google, Inc, August 2017. Profit of $19.37.
 
 # How to Run
 
@@ -120,6 +105,25 @@ python rl_dqn.py
 ```
 python backtest.py
 ```
+
+
+# Results
+
+Some examples of results on test sets:
+
+![^GSPC 2015](https://github.com/edwardhdlu/q-trader/blob/master/images/^GSPC_2015.png)
+S&P 500, 2015. Profit of $431.04.
+
+![BABA_2015](https://github.com/edwardhdlu/q-trader/blob/master/images/BABA_2015.png)
+Alibaba Group Holding Ltd, 2015. Loss of $351.59.
+
+![AAPL 2016](https://github.com/edwardhdlu/q-trader/blob/master/images/AAPL_2016.png)
+Apple, Inc, 2016. Profit of $162.73.
+
+![GOOG_8_2017](https://github.com/edwardhdlu/q-trader/blob/master/images/GOOG_8_2017.png)
+Google, Inc, August 2017. Profit of $19.37.
+
+
 
 # References
 
