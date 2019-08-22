@@ -9,10 +9,9 @@ import random
 from collections import deque
 
 class Agent:
-    def __init__(self, state_size, use_existing_model=False, model_name=""):
+    def __init__(self, state_size, use_existing_model=False, model_name="", random_action_decay = 0.999995):
         self.state_size    = state_size # normalized previous days
         self.memory        = deque(maxlen=1000)
-        self.open_orders   = []
         self.model_name    = model_name
         self.use_existing_model       = use_existing_model
         self.actions       = ['hold', 'buy', 'sell']
@@ -20,7 +19,7 @@ class Agent:
         self.gamma         = 0.95 #aka decay or discount rate, determines the importance of future rewards.If=0 then agent will only learn to consider current rewards. if=1 it will make it strive for a long-term high reward.
         self.epsilon       = 1.0  #aka exploration rate, this is the rate in which an agent randomly decides its action rather than prediction.
         self.epsilon_min   = 0.1  #we want the agent to explore at least this amount.
-        self.epsilon_decay = 0.999995#we want to decrease the number of explorations as it gets good at trading.
+        self.epsilon_decay = random_action_decay#we want to decrease the number of explorations as it gets good at trading.
 
         self.model         = load_model("files/output/" + model_name) if use_existing_model else self._build_net()
 
@@ -33,14 +32,22 @@ class Agent:
         model.compile  (loss="mse"      , optimizer=Adam(lr=0.001))
         return model
 
+
+
+
+
+
     def remember(self ,state, action, reward, next_state, done):
         self.memory.append((state, action, reward, next_state, done))
 
 
     #best action is a tradeoff bw predicting based on past(exploitation) and by exploration randomly: letting the model predict the action of current state based on the data you trained
     def choose_best_action(self, state):
+
         #exploring from time to time
-        if self.use_existing_model == False and np.random.rand() < self.epsilon:
+        if self.use_existing_model == False :
+            prob_exploit = np.random.rand()
+            if prob_exploit < self.epsilon:
                 random_action = random.randrange(self.action_size)
                 return random_action
         #exploiting = predicting
@@ -80,8 +87,8 @@ class Agent:
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
         #print(f'epsilon={self.epsilon}')
-        else:
-            print(f'warn!!! epsilon={self.epsilon} is too low. agent will exploit too much and not explore. u may have to increase epsilon_decay up to 1')
+        #else:
+        #    print(f'warn!!! epsilon={self.epsilon} is too low. agent will exploit too much and not explore. u may have to increase epsilon_decay up to 1')
 
     #increases learning speed with mini-batches
     def prepare_mem_batch(self, mini_batch_size):
