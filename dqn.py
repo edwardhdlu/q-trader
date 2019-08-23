@@ -29,8 +29,8 @@ class Dqn:
             for t in range(l):
 
                 action = agent.choose_best_action(state)#tradeoff bw predict and random
-
-                reward, total_rewards, total_profits, total_trades = self.execute_action (action, data[t], total_rewards, total_profits, total_trades)
+                #print(f'state={state}')
+                reward, total_rewards, total_profits, total_trades = self.execute_action (action, data[t], t, total_rewards, total_profits, total_trades)
 
                 done = True if t == l - 1 else False
                 next_state = self.get_state(data, t + 1, window_size + 1)
@@ -39,17 +39,17 @@ class Dqn:
                 state = next_state
 
                 if done:
-                    print(f'Episode {episode}/{episodes} Total Profit: {formatPrice(total_profits)} , Total trades: {total_trades}, probability of random action: {agent.epsilon}')
+                    print(f'Episode {episode}/{episodes} Total Profit: {formatPrice(total_profits)} , Total trades: {total_trades}, probability of random action: {np.round(agent.epsilon,3)}')
                     print("---------------------------------------")
                     rewards_vs_episode.append(total_rewards)
-                    profit_vs_episode.append(total_profits)
+                    profit_vs_episode.append(np.round(total_profits,4))
                     trades_vs_episode.append(total_trades)
                     epsilon_vs_episode.append(agent.epsilon)
 
                 if len(agent.memory) > batch_size:#if memory of agent gets full:
                     agent.experience_replay(batch_size)#fit
                 #clean memory ?
-            if episode % 10 == 0:
+            if episode % 30 == 0:
                 model_name = "files/output/model_ep" + str(episode)
                 agent.model.save(model_name)
                 print(f'{model_name} saved')
@@ -61,12 +61,13 @@ class Dqn:
         return rewards_vs_episode, profit_vs_episode, trades_vs_episode, epsilon_vs_episode, model_name
 
 
-    def execute_action(self, action, close_price, total_rewards, total_profits, total_trades):
+    def execute_action(self, action, close_price, t, total_rewards, total_profits, total_trades):
+
         if action == 1:  # buy
             self.open_orders.append(close_price)
             total_trades += 1
             reward = 0
-            #print(f'row #{t} Buy  @ ' + formatPrice(data[t]))
+            #print(f'row #{t} Buy  @ ' + formatPrice(close_price))
 
         elif action == 2 and len(self.open_orders) > 0:  # sell (or exiting trade)
 
@@ -75,11 +76,11 @@ class Dqn:
             log_return = np.log(return_rate)#for normal distribution
             total_profits += log_return
             reward = log_return#get_reward(return_rate, total_profits)
-            #print(f'row #{t} exit @ ' + formatPrice(data[t]) + " | return_rate: " + formatPrice(return_rate))
+            #print(f'row #{t} exit @ ' + formatPrice(close_price) + " | return_rate: " + formatPrice(return_rate))
 
         else:  # hold
             reward = 0
-            # print (f'row #{t} Hold')
+            #print(f'row #{t} Hold')
         total_rewards += reward
         return reward, total_rewards, total_profits, total_trades
 
