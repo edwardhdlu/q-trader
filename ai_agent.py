@@ -75,9 +75,9 @@ class Agent:
 
             # make the agent to approximately map
             # the current state to future discounted reward
-            # We'll call that y_f
+            # We'll call that y_f  = (0.25,0.25,0.25)
             y_f = self.model.predict(curr_state)
-            y_f[0][action] = target
+            y_f[0][action] = target # (0.25,0.25,1.00) // only action 2 value will change
             self.model.fit \
                 (curr_state
                  , y_f

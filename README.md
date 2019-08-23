@@ -97,9 +97,10 @@ the model get updated every few days.
 python rl_dqn.py
 ```
 
-- See 2 plots generated 
-	- profits over time
-	- trades over time
+- See 3 plots generated 
+	- episode vs profits
+	- episode vs trades
+	- episode vs epsilon
 
 - Back-test last model created in files/output/ on any stock
 ```

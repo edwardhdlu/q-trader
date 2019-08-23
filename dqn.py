@@ -13,18 +13,17 @@ class Dqn:
 
     def learn(self, data, episodes,  window_size, batch_size, use_existing_model, probability_of_random_action):
         agent              = Agent(window_size, use_existing_model, '', probability_of_random_action)
-
         l                  = len(data) - 1
         rewards_vs_episode = []
         profit_vs_episode  = []
         trades_vs_episode  = []
-
+        epsilon_vs_episode = []
         for episode in range(episodes + 1):
             #print("Episode " + str(e) + "/" + str(episode_count))
-            state = self.get_state(data, 0, window_size + 1)
-            total_profits = 0
-            total_trades  = 0
-            total_rewards = 0
+            state            = self.get_state(data, 0, window_size + 1)
+            total_profits    = 0
+            total_trades     = 0
+            total_rewards    = 0
             self.open_orders = []
 
             for t in range(l):
@@ -45,6 +44,7 @@ class Dqn:
                     rewards_vs_episode.append(total_rewards)
                     profit_vs_episode.append(total_profits)
                     trades_vs_episode.append(total_trades)
+                    epsilon_vs_episode.append(agent.epsilon)
 
                 if len(agent.memory) > batch_size:#if memory of agent gets full:
                     agent.experience_replay(batch_size)#fit
@@ -58,7 +58,7 @@ class Dqn:
         model_name = "files/output/model_ep" + str(episodes)
         agent.model.save(model_name)
         print(f'{model_name} saved')
-        return rewards_vs_episode, profit_vs_episode, trades_vs_episode, model_name
+        return rewards_vs_episode, profit_vs_episode, trades_vs_episode, epsilon_vs_episode, model_name
 
 
     def execute_action(self, action, close_price, total_rewards, total_profits, total_trades):
