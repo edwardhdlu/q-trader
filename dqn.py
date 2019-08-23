@@ -49,7 +49,7 @@ class Dqn:
                 if len(agent.memory) > batch_size:#if memory of agent gets full:
                     agent.experience_replay(batch_size)#fit
                 #clean memory ?
-            if episode % 30 == 0:
+            if episode % 1000 == 0:
                 model_name = "files/output/model_ep" + str(episode)
                 agent.model.save(model_name)
                 print(f'{model_name} saved')
