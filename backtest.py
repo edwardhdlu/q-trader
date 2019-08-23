@@ -15,8 +15,9 @@ def bt(window_size, use_existing_model, model_name):
     agent        = Agent(window_size, use_existing_model, model_name)
     state        = dqn.get_state(data, 0, (window_size + 1))
     total_profit = 0
-    trade_count  = 0
-    hold_count   = 0
+    total_buys  = 0
+    trade_sells  = 0
+    total_holds   = 0
 
     for t in range(l):
 
@@ -26,18 +27,19 @@ def bt(window_size, use_existing_model, model_name):
             dqn.open_orders.append(data[t])
             print("Buy  @ " + formatPrice(data[t]))
             reward     = 0
-            trade_count += 1
+            total_buys += 1
 
         elif action == 2 and len(dqn.open_orders) > 0:  # sell
             bought_price = dqn.open_orders.pop(0)
             return_rate = data[t] / bought_price
             log_return = np.log(return_rate)#for normal distribution
             total_profit += log_return - trading_fee
+            trade_sells += 1
             print("Sell @ " + formatPrice(data[t]) + " | Profit: " + formatPrice(log_return))
 
         else:# hold
             #print ('Hold')
-            hold_count += 1
+            total_holds += 1
 
 
         done = True if t == l - 1 else False
@@ -47,7 +49,7 @@ def bt(window_size, use_existing_model, model_name):
 
         if done:
             print("-----------------------------------------")
-            print(f'Total Profit: {formatPrice(total_profit)} , Total trades: {trade_count}, hold_count: {hold_count}')
+            print(f'Total Profit: {formatPrice(total_profit)} , Total hold/buy/exit trades: {total_holds} / {total_buys} / {trade_sells}')
             print("-----------------------------------------")
 
 
