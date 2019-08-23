@@ -13,10 +13,10 @@ np.set_printoptions(suppress=True) #prevent numpy exponential #notation on print
 
 stock_name          = '^GSPC_04'#^GSPC_2001_2010  ^GSPC_1970_2018  ^GSPC_2011
 num_features        = 1# (t)   super simple features
-num_neurons         = 16
-episodes            = 70000# minimum 200 episodes for results. episode represent trade and learn on all data.
+num_neurons         = 8
+episodes            = 60000# minimum 200 episodes for results. episode represent trade and learn on all data.
 batch_size          = 1#  (int) size of a batched sampled from replay buffer for training
-random_action_decay = 0.999995
+random_action_decay = 0.99995
 use_existing_model  = False
 data                = getStockDataVec(stock_name)#https://www.kaggle.com/camnugent/sandp500
 l                   = len(data) - 1

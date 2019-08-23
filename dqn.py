@@ -34,7 +34,7 @@ class Dqn:
 
                 done = True if t == l - 1 else False
                 next_state = self.get_state(data, t + 1, num_features + 1)
-                print(f'row #{t} {agent.actions[action]} @{data[t]}, state1={state}, state2={next_state}, reward={reward}')
+                #print(f'row #{t} {agent.actions[action]} @{data[t]}, state1={state}, state2={next_state}, reward={reward}')
                 agent.remember(state, action, reward, next_state, done)#store contents of memory in buffer for future learning
                 state = next_state
 

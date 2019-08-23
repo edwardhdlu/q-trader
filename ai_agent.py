@@ -14,7 +14,7 @@ class Agent:
         self.memory        = deque(maxlen=1000)
         self.model_name    = model_name
         self.use_existing_model       = use_existing_model
-        self.actions       = ['hold', 'buy', 'sell']
+        self.actions       = ['hold', 'buy ', 'sell']
         self.action_size   = len(self.actions)
         self.gamma         = 0.95 #aka decay or discount rate, determines the importance of future rewards.If=0 then agent will only learn to consider current rewards. if=1 it will make it strive for a long-term high reward.
         self.epsilon       = 1.0  #aka exploration rate, this is the rate in which an agent randomly decides its action rather than prediction.
