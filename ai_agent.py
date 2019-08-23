@@ -9,8 +9,7 @@ import random
 from collections import deque
 
 class Agent:
-    def __init__(self, num_features, use_existing_model=False, model_name="", random_action_decay = 0.999995, num_neurons=64):
-        self.num_features    = num_features # normalized previous days
+    def __init__(self, num_features, use_existing_model=False, model_name="", random_action_min=0.1, random_action_decay = 0.999995, num_neurons=64):
         self.memory        = deque(maxlen=1000)
         self.model_name    = model_name
         self.use_existing_model       = use_existing_model
@@ -18,11 +17,13 @@ class Agent:
         self.action_size   = len(self.actions)
         self.gamma         = 0.95 #aka decay or discount rate, determines the importance of future rewards.If=0 then agent will only learn to consider current rewards. if=1 it will make it strive for a long-term high reward.
         self.epsilon       = 1.0  #aka exploration rate, this is the rate in which an agent randomly decides its action rather than prediction.
-        self.epsilon_min   = 0.1  #we want the agent to explore at least this amount.
+        self.num_trains    = 0
+        self.epsilon_min   = random_action_min  #we want the agent to explore at least this amount.
         self.epsilon_decay = random_action_decay#we want to decrease the number of explorations as it gets good at trading.
         self.num_neurons   = num_neurons
+        self.num_features  = num_features # normalized previous days
         self.model         = load_model("files/output/" + model_name) if use_existing_model else self._build_net()
-        self.num_trains   = 0
+
 
     def _build_net(self ):
         model = Sequential()

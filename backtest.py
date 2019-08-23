@@ -66,5 +66,5 @@ data = getStockDataVec(stock_name)
 l = len(data) - 1
 trading_fee=0
 print(f'starting back-testing model {model_name} on {stock_name} (file has {l} rows), features = {num_features} ')
-bt(num_features, use_existing_model, model_name)
+bt   (num_features, use_existing_model, model_name)
 print(f'finished back-testing model {model_name} on {stock_name} (file has {l} rows), features = {num_features} ')

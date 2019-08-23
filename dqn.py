@@ -11,8 +11,8 @@ class Dqn:
         self.model_name = ''
 
 
-    def learn(self, data, episodes, num_features, batch_size, use_existing_model, probability_of_random_action, num_neurons=64):
-        agent              = Agent(num_features, use_existing_model, '', probability_of_random_action, num_neurons)
+    def learn(self, data, episodes, num_features, batch_size, use_existing_model, random_action_min=0.1, random_action_decay=0.99995, num_neurons=64):
+        agent              = Agent(num_features, use_existing_model, '', random_action_min, random_action_decay, num_neurons)
         l                  = len(data) - 1
         rewards_vs_episode = []
         profit_vs_episode  = []
@@ -59,7 +59,7 @@ class Dqn:
         model_name = "files/output/model_ep" + str(episodes)
         agent.model.save(model_name)
         print(f'{model_name} saved')
-        return  profit_vs_episode, trades_vs_episode, epsilon_vs_episode, model_name, agent.num_trains
+        return  profit_vs_episode, trades_vs_episode, epsilon_vs_episode, model_name, agent.num_trains, agent.epsilon
 
 
     def execute_action(self, action, close_price, t, total_profits, total_trades):
