@@ -11,8 +11,8 @@ class Dqn:
         self.model_name = ''
 
 
-    def learn(self, data, episodes,  window_size, batch_size, use_existing_model, probability_of_random_action):
-        agent              = Agent(window_size, use_existing_model, '', probability_of_random_action)
+    def learn(self, data, episodes, num_features, batch_size, use_existing_model, probability_of_random_action, num_neurons=64):
+        agent              = Agent(num_features, use_existing_model, '', probability_of_random_action, num_neurons)
         l                  = len(data) - 1
         rewards_vs_episode = []
         profit_vs_episode  = []
@@ -20,7 +20,7 @@ class Dqn:
         epsilon_vs_episode = []
         for episode in range(episodes + 1):
             #print("Episode " + str(e) + "/" + str(episode_count))
-            state            = self.get_state(data, 0, window_size + 1)
+            state            = self.get_state(data, 0, num_features + 1)
             total_profits    = 0
             total_trades     = 0
             total_rewards    = 0
@@ -33,7 +33,7 @@ class Dqn:
                 reward, total_rewards, total_profits, total_trades = self.execute_action (action, data[t], t, total_rewards, total_profits, total_trades)
 
                 done = True if t == l - 1 else False
-                next_state = self.get_state(data, t + 1, window_size + 1)
+                next_state = self.get_state(data, t + 1, num_features + 1)
                 #print(f'next_state={next_state}')
                 agent.remember(state, action, reward, next_state, done)#store contents of memory in buffer for future learning
                 state = next_state

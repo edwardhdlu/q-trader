@@ -9,8 +9,8 @@ import random
 from collections import deque
 
 class Agent:
-    def __init__(self, state_size, use_existing_model=False, model_name="", random_action_decay = 0.999995):
-        self.state_size    = state_size # normalized previous days
+    def __init__(self, num_features, use_existing_model=False, model_name="", random_action_decay = 0.999995, num_neurons=64):
+        self.num_features    = num_features # normalized previous days
         self.memory        = deque(maxlen=1000)
         self.model_name    = model_name
         self.use_existing_model       = use_existing_model
@@ -20,16 +20,17 @@ class Agent:
         self.epsilon       = 1.0  #aka exploration rate, this is the rate in which an agent randomly decides its action rather than prediction.
         self.epsilon_min   = 0.1  #we want the agent to explore at least this amount.
         self.epsilon_decay = random_action_decay#we want to decrease the number of explorations as it gets good at trading.
-
+        self.num_neurons   = num_neurons
         self.model         = load_model("files/output/" + model_name) if use_existing_model else self._build_net()
 
-    def _build_net(self):
+    def _build_net(self ):
         model = Sequential()
-        model.add(Dense(units=64		, activation="relu",  input_dim=self.state_size))
-        model.add(Dense(units=32		, activation="relu"))
-        model.add(Dense(units=8 		, activation="relu"))
-        model.add(Dense(self.action_size, activation="linear"))
-        model.compile  (loss="mse"      , optimizer=Adam(lr=0.001))
+        model.add(Dense(units=np.maximum(int(self.num_neurons/1),1) , activation="relu", input_dim=self.num_features))
+        model.add(Dense(units=np.maximum(int(self.num_neurons/2),1) , activation="relu"))
+        model.add(Dense(units=np.maximum(int(self.num_neurons/8),1) , activation="relu"))
+        model.add(Dense(units=self.action_size             , activation="linear"))
+        model.compile  (loss="mse"                         , optimizer=Adam(lr=0.001))
+        model.summary()
         return model
 
 

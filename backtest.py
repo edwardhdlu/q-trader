@@ -10,10 +10,10 @@ import sys
 
 
 
-def bt(window_size, use_existing_model, model_name):
+def bt(num_features, use_existing_model, model_name):
     dqn          = Dqn()
-    agent        = Agent(window_size, use_existing_model, model_name)
-    state        = dqn.get_state(data, 0, (window_size + 1))
+    agent        = Agent(num_features, use_existing_model, model_name)
+    state        = dqn.get_state(data, 0, (num_features + 1))
     total_profit = 0
     total_buys  = 0
     trade_sells  = 0
@@ -43,7 +43,7 @@ def bt(window_size, use_existing_model, model_name):
 
 
         done = True if t == l - 1 else False
-        next_state = dqn.get_state(data, t + 1, window_size + 1)
+        next_state = dqn.get_state(data, t + 1, num_features + 1)
         #agent.remember(state, action, reward, next_state, done)
         state = next_state
 
@@ -60,11 +60,11 @@ def bt(window_size, use_existing_model, model_name):
 stock_name    = '^GSPC_1970_2018'#^GSPC_2011  GSPC_2019 GSPC_1970_2019 GSPC_1970_2018
 model_name    = 'model_ep500'#model_ep0, model_ep10, model_ep20, model_ep30
 model_inst    = load_model("files/output/" + model_name)
-window_size   = model_inst.layers[0].input.shape.as_list()[1]
+num_features   = model_inst.layers[0].input.shape.as_list()[1]
 use_existing_model = True
 data = getStockDataVec(stock_name)
 l = len(data) - 1
 trading_fee=0
-print(f'starting back-testing model {model_name} on {stock_name} (file has {l} rows), window = {window_size} ')
-bt(window_size, use_existing_model, model_name)
-print(f'finished back-testing model {model_name} on {stock_name} (file has {l} rows), window = {window_size} ')
+print(f'starting back-testing model {model_name} on {stock_name} (file has {l} rows), features = {num_features} ')
+bt(num_features, use_existing_model, model_name)
+print(f'finished back-testing model {model_name} on {stock_name} (file has {l} rows), features = {num_features} ')
