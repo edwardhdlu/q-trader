@@ -18,52 +18,57 @@ class Dqn:
         profit_vs_episode  = []
         trades_vs_episode  = []
         epsilon_vs_episode = []
-        for episode in range(episodes + 1):
+        for episode in range(1,episodes + 1):
             #print("Episode " + str(e) + "/" + str(episode_count))
             state            = self.get_state(data, 0, num_features + 1)
             total_profits    = 0
-            total_trades     = 0
-            total_rewards    = 0
-            self.open_orders = []
+            total_trades     = 1
+            #total_rewards    = 0
+            self.open_orders = [data[0]]
 
-            for t in range(l):
+            for t in range(1,l):
 
                 action = agent.choose_best_action(state)#tradeoff bw predict and random
                 #print(f'state={state}')
-                reward, total_rewards, total_profits, total_trades = self.execute_action (action, data[t], t, total_rewards, total_profits, total_trades)
+                reward, total_profits, total_trades = self.execute_action (action, data[t], t, total_profits, total_trades)
 
                 done = True if t == l - 1 else False
                 next_state = self.get_state(data, t + 1, num_features + 1)
-                #print(f'next_state={next_state}')
+                print(f'row #{t} {agent.actions[action]} @{data[t]}, state1={state}, state2={next_state}, reward={reward}')
                 agent.remember(state, action, reward, next_state, done)#store contents of memory in buffer for future learning
                 state = next_state
 
                 if done:
-                    print(f'Episode {episode}/{episodes} Total Profit: {formatPrice(total_profits)} , Total trades: {total_trades}, probability of random action: {np.round(agent.epsilon,3)}')
+                    eps = np.round(agent.epsilon,3)
+                    print(f'Episode {episode}/{episodes} Total Profit: {formatPrice(total_profits)} , Total trades: {total_trades}, probability of random action: {eps}')
                     print("---------------------------------------")
-                    rewards_vs_episode.append(total_rewards)
+                    #rewards_vs_episode.append(total_rewards)
                     profit_vs_episode.append(np.round(total_profits,4))
                     trades_vs_episode.append(total_trades)
-                    epsilon_vs_episode.append(agent.epsilon)
+                    epsilon_vs_episode.append(eps)
 
                 if len(agent.memory) > batch_size:#if memory of agent gets full:
                     agent.experience_replay(batch_size)#fit
                 #clean memory ?
-            if episode % 1000 == 0:
-                model_name = "files/output/model_ep" + str(episode)
-                agent.model.save(model_name)
-                print(f'{model_name} saved')
+            # if episode % 1000 == 0:
+            #     model_name = "files/output/model_ep" + str(episode)
+            #     agent.model.save(model_name)
+            #     print(f'{model_name} saved')
 
 
         model_name = "files/output/model_ep" + str(episodes)
         agent.model.save(model_name)
         print(f'{model_name} saved')
-        return rewards_vs_episode, profit_vs_episode, trades_vs_episode, epsilon_vs_episode, model_name
+        return  profit_vs_episode, trades_vs_episode, epsilon_vs_episode, model_name, agent.num_trains
 
 
-    def execute_action(self, action, close_price, t, total_rewards, total_profits, total_trades):
+    def execute_action(self, action, close_price, t, total_profits, total_trades):
 
-        if action == 1:  # buy
+        if action == 0:  # hold
+            reward = 0
+            #print(f'row #{t} Hold')
+
+        elif action == 1:  # buy
             self.open_orders.append(close_price)
             total_trades += 1
             reward = 0
@@ -76,13 +81,13 @@ class Dqn:
             log_return = np.log(return_rate)#for normal distribution
             total_profits += log_return
             reward = log_return#get_reward(return_rate, total_profits)
-            #print(f'row #{t} exit @ ' + formatPrice(close_price) + " | return_rate: " + formatPrice(return_rate))
-
-        else:  # hold
+            #print(f'row #{t} exit @ ' + formatPrice(close_price) + " | return_rate: " + formatPrice(reward))
+        else:
             reward = 0
-            #print(f'row #{t} Hold')
-        total_rewards += reward
-        return reward, total_rewards, total_profits, total_trades
+            #print('no open orders')
+
+        #total_rewards += reward
+        return reward, total_profits, total_trades
 
 
     # returns an an n-day state representation ending at time t of difference bw close prices. ex. [0.5,0.5,0.5,0.4,0.3,0.2,0.5,0.4,0.3,0.2]

@@ -22,6 +22,7 @@ class Agent:
         self.epsilon_decay = random_action_decay#we want to decrease the number of explorations as it gets good at trading.
         self.num_neurons   = num_neurons
         self.model         = load_model("files/output/" + model_name) if use_existing_model else self._build_net()
+        self.num_trains   = 0
 
     def _build_net(self ):
         model = Sequential()
@@ -84,10 +85,12 @@ class Agent:
                  , y_f
                  , epochs=1
                  , verbose=0)
+            self.num_trains += 1
 
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
-        #print(f'epsilon={self.epsilon}')
+
+            #print(f'epsilon={self.epsilon}')
         #else:
         #    print(f'warn!!! epsilon={self.epsilon} is too low. agent will exploit too much and not explore. u may have to increase epsilon_decay up to 1')
 
@@ -96,7 +99,7 @@ class Agent:
         mini_batch = []
         #mini_batch = random.sample(self.memory, batch_size)#sample is not a good choice in timeseries data
         l = len(self.memory)
-        for i in range(l - mini_batch_size + 1, l):
+        for i in range(l - mini_batch_size , l):
             mini_batch.append(self.memory[i])
         return mini_batch
 '''
