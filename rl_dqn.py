@@ -8,6 +8,15 @@ print('time is') #episodes=2 +window=252 takes 354 sec
 print(datetime.now().strftime('%H:%M:%S'))
 start_time = time.time()
 seed()
+
+stock_name    = '^GSPC_2001_2010'#^GSPC_2001_2010  ^GSPC_1970_2018  ^GSPC_2011
+window_size   = 126# (t)   super simple features
+episodes      = 200# minimum 200 episodes for results. episode represent trade and learn on all data.
+batch_size    = 15#  (int) size of a batched sampled from replay buffer for training
+random_action_decay = 0.999995
+use_existing_model = False
+data          = getStockDataVec(stock_name)#https://www.kaggle.com/camnugent/sandp500
+l             = len(data) - 1
 np.set_printoptions(precision=4)
 np.set_printoptions(suppress=True) #prevent numpy exponential #notation on print, default False
 
