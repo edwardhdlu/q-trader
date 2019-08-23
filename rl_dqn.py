@@ -13,7 +13,7 @@ np.set_printoptions(suppress=True) #prevent numpy exponential #notation on print
 
 stock_name          = '^GSPC_20'#^GSPC_2001_2010  ^GSPC_1970_2018  ^GSPC_2011
 window_size         = 1# (t)   super simple features
-episodes            = 2000# minimum 200 episodes for results. episode represent trade and learn on all data.
+episodes            = 20000# minimum 200 episodes for results. episode represent trade and learn on all data.
 batch_size          = 2#  (int) size of a batched sampled from replay buffer for training
 random_action_decay = 0.99995
 use_existing_model  = False
