@@ -40,17 +40,23 @@ def plot_histogram(x, bins, title, xlabel, ylabel, xmin=None, xmax=None):
 	plt.savefig('files/output/' + title + '.png')
 
 
-def plot_barchart(list, title="BT", ylabel="Price", xlabel="Date", colors='green'):
+def plot_barchart(list, file="BT", title='BT', ylabel="Price", xlabel="Date", colors='green'):
 	l = len(list)
 	x = range(l)
+	# font = {'family': 'serif',
+	# 		'color':  'black',
+	# 		'weight': 'normal',
+	# 		'size': 8,
+	# 		}
 	myarray = np.asarray(list)
 	colors = colors  # 'green'#np.array([(1,0,0)]*l)
 	# colors[myarray > 0.0] = (0,0,1)
 	plt.clf()
 	plt.bar(x, myarray, color=colors)
+	#plt.text(0, 0,text,  fontdict=font)
 	plt.xlabel(xlabel)
 	plt.ylabel(ylabel)
 	plt.title(title)
-	plt.savefig('files/output/' + title + '.png')
+	plt.savefig('files/output/' + file + '.png')
 
 
