@@ -11,7 +11,7 @@ seed()
 np.set_printoptions(precision=4)
 np.set_printoptions(suppress=True) #prevent numpy exponential #notation on print, default False
 
-stock_name          = '^GSPC_03'#^GSPC_2001_2010  ^GSPC_1970_2018  ^GSPC_2011
+stock_name          = '^GSPC_01'#^GSPC_2001_2010  ^GSPC_1970_2018  ^GSPC_2011
 num_features        = 1# (t)   super simple features
 num_neurons         = 32
 episodes            = 60000# minimum 200 episodes for results. episode represent trade and learn on all data.
