@@ -12,23 +12,24 @@ np.set_printoptions(precision=4)
 np.set_printoptions(suppress=True) #prevent numpy exponential #notation on print, default False
 
 #change these params
-stock_name          = '^GSPC_02'#^GSPC_2001_2010  ^GSPC_1970_2018  ^GSPC_2011
-num_features        = 1# (t)   super simple features
-num_neurons         = 4
-episodes            = 180# minimum 200 episodes for results. episode represent trade and learn on all data.
-batch_size          = 1#  (int) size of a batched sampled from replay buffer for training
-random_action_decay = 0.93
+stock_name          = '^GSPC_01'#^GSPC_2001_2010  ^GSPC_1970_2018  ^GSPC_2011
+num_features        = 1# (int) > 0   super simple features
+num_neurons         = 4#(int) > 0
+episodes            = 180# (int) > 0 ,minimum 200 episodes for results. episode represent trade and learn on all data.
+batch_size          = 1   # (int) > 0 size of a batched sampled from replay buffer for training
+random_action_decay      = 0.8993#(float) 0-1
+future_reward_importance = 0.9500#(float) 0-1 aka decay or discount rate, determines the importance of future rewards.If=0 then agent will only learn to consider current rewards. if=1 it will make it strive for a long-term high reward.
 
 ##do not touch those params
-random_action_min   = 0.0  #do not touch this
-use_existing_model  = False#do not touch this
+random_action_min   = 0.0  #(float) 0-1 do not touch this
+use_existing_model  = False#(bool)      do not touch this
 data                = getStockDataVec(stock_name)#https://www.kaggle.com/camnugent/sandp500
 l                   = len(data) - 1
 print(f'Running {episodes} episodes, on {stock_name} (has {l} rows), features={num_features}, batch={batch_size}, random_action_decay={random_action_decay}')
 
 dqn=Dqn()
 profit_vs_episode, trades_vs_episode, epsilon_vs_episode, model_name, num_trains , eps= \
-    dqn.learn      (data, episodes, num_features, batch_size, use_existing_model, random_action_min, random_action_decay, num_neurons)
+    dqn.learn      (data, episodes, num_features, batch_size, use_existing_model, random_action_min, random_action_decay, num_neurons, future_reward_importance)
 
 
 

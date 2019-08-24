@@ -13,52 +13,36 @@ import sys
 def bt(num_features, use_existing_model, model_name):
     dqn          = Dqn()
     agent        = Agent(num_features, use_existing_model, model_name)
-    state        = dqn.get_state(data, 0, (num_features + 1))
-    total_profit = 0
-    total_buys  = 0
-    trade_sells  = 0
-    total_holds   = 0
+    state            = dqn.get_state(data, num_features, num_features)
+    total_profits    = 0
+    total_holds      = 0
+    total_buys       = 1
+    total_sells      = 0
 
-    for t in range(l):
+
+    for t in range(num_features,l):
 
         action = agent.choose_best_action(state)#it will always predict
 
-        if action == 1:  # buy
-            dqn.open_orders.append(data[t])
-            print("Buy  @ " + formatPrice(data[t]))
-            reward     = 0
-            total_buys += 1
-
-        elif action == 2 and len(dqn.open_orders) > 0:  # sell
-            bought_price = dqn.open_orders.pop(0)
-            return_rate = data[t] / bought_price
-            log_return = np.log(return_rate)#for normal distribution
-            total_profit += log_return - trading_fee
-            trade_sells += 1
-            print("Sell @ " + formatPrice(data[t]) + " | Profit: " + formatPrice(log_return))
-
-        else:# hold
-            #print ('Hold')
-            total_holds += 1
-
+        reward, total_profits, total_holds, total_buys, total_sells = dqn.execute_action (action, data[t], t, total_profits, total_holds, total_buys, total_sells)
 
         done = True if t == l - 1 else False
-        next_state = dqn.get_state(data, t + 1, num_features + 1)
-        #agent.remember(state, action, reward, next_state, done)
+
+        next_state = dqn.get_state(data, t + 1, num_features)
+        print(f'row #{t} {agent.actions[action]} @{data[t]}, state1={state}, state2={next_state}, reward={reward}')
         state = next_state
 
         if done:
             print("-----------------------------------------")
-            print(f'Total Profit: {formatPrice(total_profit)} , Total hold/buy/exit trades: {total_holds} / {total_buys} / {trade_sells}')
+            print(f'Total Profit: {formatPrice(total_profits)} , Total hold/buy/exit trades: {total_holds} / {total_buys} / {total_sells}')
             print("-----------------------------------------")
-
 
 
 
 
 
 stock_name    = '^GSPC_1970_2018'#^GSPC_2011  GSPC_2019 GSPC_1970_2019 GSPC_1970_2018
-model_name    = 'model_ep500'#model_ep0, model_ep10, model_ep20, model_ep30
+model_name    = 'model_ep1800'#model_ep0, model_ep10, model_ep20, model_ep30
 model_inst    = load_model("files/output/" + model_name)
 num_features   = model_inst.layers[0].input.shape.as_list()[1]
 use_existing_model = True

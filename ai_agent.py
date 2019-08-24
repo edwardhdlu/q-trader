@@ -9,13 +9,13 @@ import random
 from collections import deque
 
 class Agent:
-    def __init__(self, num_features, use_existing_model=False, model_name="", random_action_min=0.1, random_action_decay = 0.999995, num_neurons=64):
+    def __init__(self, num_features, use_existing_model=False, model_name="", random_action_min=0.1, random_action_decay = 0.999995, num_neurons=64 ,future_reward_importance=0.95):
         self.memory        = deque(maxlen=1000)
         self.model_name    = model_name
         self.use_existing_model       = use_existing_model
         self.actions       = ['hold', 'buy ', 'sell']
         self.action_size   = len(self.actions)
-        self.gamma         = 0.95 #aka decay or discount rate, determines the importance of future rewards.If=0 then agent will only learn to consider current rewards. if=1 it will make it strive for a long-term high reward.
+        self.gamma         = future_reward_importance #aka decay or discount rate, determines the importance of future rewards.If=0 then agent will only learn to consider current rewards. if=1 it will make it strive for a long-term high reward.
         self.epsilon       = 1.0  #aka exploration rate, this is the rate in which an agent randomly decides its action rather than prediction.
         self.num_trains    = 0
         self.epsilon_min   = random_action_min  #we want the agent to explore at least this amount.
@@ -70,17 +70,17 @@ class Agent:
 
             if not done:
                 # predict the future discounted reward
-                pred = self.model.predict(next_state)
+                pred = self.model.predict(next_state)#[0, 0, 0.0029]   target=0.0036
                 #In plain English, it means maximum future reward for this state and action (s,a) is the immediate reward r plus maximum future reward for the next state
                 target = reward + self.gamma * np.amax(pred[0])#the bellman equation for discounted future rewards. https://www.youtube.com/watch?v=8vBXARV_ufk
             else:
-                target = reward
-
+                target = reward #1sell>2sell reward=0.0007, pred=[0,0,0.03], target=0.04  , y_f=[0,0,0.004] > y_f= [0,0,0.004]
+                                #1hold>2sell reward=0.0094, pred=[        ], target=0.0094, y_f=[0,0,0.005] > y_f= [0,0,0.0094]
             # make the agent to approximately map
             # the current state to future discounted reward
             # We'll call that y_f  = (0.25,0.25,0.25)
             y_f = self.model.predict(curr_state)
-            y_f[0][action] = target # (0.25,0.25,1.00) // only action 2 value will change
+            y_f[0][action] = target #  // only action 2 value will change
             self.model.fit \
                 (curr_state
                  , y_f
