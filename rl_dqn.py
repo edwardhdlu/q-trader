@@ -4,7 +4,7 @@ import numpy as np
 from dqn import Dqn
 from utils import *
 
-print('time is') #episodes=2 +window=252 takes 354 sec
+print('time is') #episodes=2 +features=252 takes 6 minutes
 print(datetime.now().strftime('%H:%M:%S'))
 start_time = time.time()
 seed()
