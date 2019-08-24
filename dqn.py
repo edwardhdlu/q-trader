@@ -20,21 +20,21 @@ class Dqn:
         epsilon_vs_episode = []
         for episode in range(1,episodes + 1):
             #print("Episode " + str(e) + "/" + str(episode_count))
-            state            = self.get_state(data, 0, num_features + 1)
+            state            = self.get_state(data, num_features, num_features)
             total_profits    = 0
             total_trades     = 1
             #total_rewards    = 0
             self.open_orders = [data[0]]
 
-            for t in range(1,l):
+            for t in range(num_features,l):
 
                 action = agent.choose_best_action(state)#tradeoff bw predict and random
                 #print(f'state={state}')
                 reward, total_profits, total_trades = self.execute_action (action, data[t], t, total_profits, total_trades)
 
                 done = True if t == l - 1 else False
-                next_state = self.get_state(data, t + 1, num_features + 1)
-                #print(f'row #{t} {agent.actions[action]} @{data[t]}, state1={state}, state2={next_state}, reward={reward}')
+                next_state = self.get_state(data, t + 1, num_features)
+                print(f'row #{t} {agent.actions[action]} @{data[t]}, state1={state}, state2={next_state}, reward={reward}')
                 agent.remember(state, action, reward, next_state, done)#store contents of memory in buffer for future learning
                 state = next_state
 
@@ -91,13 +91,16 @@ class Dqn:
 
 
     # returns an an n-day state representation ending at time t of difference bw close prices. ex. [0.5,0.5,0.5,0.4,0.3,0.2,0.5,0.4,0.3,0.2]
-    def get_state(self, data, t, n):
-        d = t - n + 1
-        block = data[d:t + 1] if d >= 0 else -d * [data[0]] + data[0:t + 1] # pad with t0
+    def get_state(self, data, to_ix, num_features):
+        from_ix = to_ix - num_features
+        if from_ix >= 0:
+            data_block = data[from_ix:to_ix + 1]
+        else:
+            data_block = -from_ix * [data[0]] + data[0:to_ix + 1] # pad with t0
         res = []
-        for i in range(n - 1):
+        for i in range(num_features):
             #res.append(sigmoid(block[i + 1] - block[i]))
-            res.append(np.log(block[i + 1] / block[i]))
+            res.append(np.log(data_block[i + 1] / data_block[i]))
             #res.append(np.log(block[i + 1])-np.log(block[i]))
         #add features
         #add cyclic feature(sin, cos)
