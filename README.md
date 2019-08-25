@@ -37,6 +37,7 @@ and all this data ( status,   amount of money gain or lost), sent to policy netw
 there are 3 possible actions that the agent can take, hold, buy, sell
 there is a zero-market impact hypothesis, which essentially
 states that the agent’s action can never be significant enough to affect the market env.
+and the ai_agent will assign score for each action and state
   
 # State
 State : Current situation returned by the environment.
@@ -55,6 +56,8 @@ There is usually an obvious natural reward for any problem.
 For games, this is usually a win or loss. For financial problems, 
 the reward is usually profit. Reward shaping augments the natural reward signal by adding additional rewards for making progress toward a good solution.
 
+# Gamma (discount rate)
+
 learning is based on immediate and long-term reward
 To make the model perform well in long-term, 
 we need to take into account not only the immediate rewards but also the future rewards we are going to get. 
@@ -66,8 +69,14 @@ This way the agent will learn to maximize the discounted future reward based on 
 
 the model is not very good at making decisions in long-term , but is quite good at predicting peaks and troughs.
 
+# Epsilon (exploration rate,)
+Epsilon, aka exploration rate, this is the rate in which an agent randomly decides its action rather than prediction.
+epsilon_min, used to let the agent  explore a minimum percent of randomness
+epsilon_decay- used to decrease the number of explorations as it gets good at trading.
+
+
 # Value
-we use TD method to calculate value (probability of action): 
+we use TD (Tempoal Difference) method to calculate value (probability of action): 
 TD In plain English, 
  means maximum future reward for this state and action (s,a) 
 is the immediate reward r plus maximum future reward for the next state

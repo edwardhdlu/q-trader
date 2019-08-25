@@ -17,9 +17,9 @@ class Agent:
         self.action_size   = len(self.actions)
         self.gamma         = future_reward_importance #aka decay or discount rate, determines the importance of future rewards.If=0 then agent will only learn to consider current rewards. if=1 it will make it strive for a long-term high reward.
         self.epsilon       = 1.0  #aka exploration rate, this is the rate in which an agent randomly decides its action rather than prediction.
-        self.num_trains    = 0
         self.epsilon_min   = random_action_min  #we want the agent to explore at least this amount.
         self.epsilon_decay = random_action_decay#we want to decrease the number of explorations as it gets good at trading.
+        self.num_trains    = 0
         self.num_neurons   = num_neurons
         self.num_features  = num_features # normalized previous days
         self.model         = load_model("files/output/" + model_name) if use_existing_model else self._build_net()
@@ -70,9 +70,9 @@ class Agent:
 
             if not done:
                 # predict the future discounted reward
-                pred = self.model.predict(next_state)#[0, 0, 0.0029]   target=0.0036
+                reward_pred = self.model.predict(next_state)#[0, 0, 0.0029]   target=0.0036
                 #In plain English, it means maximum future reward for this state and action (s,a) is the immediate reward r plus maximum future reward for the next state
-                target = reward + self.gamma * np.amax(pred[0])#the bellman equation for discounted future rewards. https://www.youtube.com/watch?v=8vBXARV_ufk
+                target = reward + self.gamma * np.amax(reward_pred[0])#the bellman equation for discounted future rewards. https://www.youtube.com/watch?v=8vBXARV_ufk
             else:
                 target = reward #1sell>2sell reward=0.0007, pred=[0,0,0.03], target=0.04  , y_f=[0,0,0.004] > y_f= [0,0,0.004]
                                 #1hold>2sell reward=0.0094, pred=[        ], target=0.0094, y_f=[0,0,0.005] > y_f= [0,0,0.0094]
