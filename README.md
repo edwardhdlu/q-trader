@@ -4,8 +4,8 @@ from https://finance.yahoo.com/quote/%5EGSPC?p=^GSPC
 or from https://www.kaggle.com/janiobachmann/s-p-500-time-series-forecasting-with-prophet/data
 
 
-# value netork (ai_agent.py)
-As illustrated in below figure, model DQN is a value network that will give probability of best action
+# Policy netork (actor ai_agent.py)
+As illustrated in below figure, model DQN is a Policy network (aka actor cause it acts or give probability of best action
 model input :
  1. historical stock data 
  2. historicsl market data 
@@ -20,8 +20,9 @@ model output(action prediction):
 ![nn](https://github.com/loliksamuel/py-ML-rl-trade/blob/master/files/output/nn.png)
 
 
-# Policy network
-a model that cooses The strategy (for bear/bull/counter trend market) that the agent employs to determine next action based on the current state(we r not using it)
+# Value network (critic)
+in ddpg it has also a value a model (aka  critic's nn, it's output is the estimated Q-value of the current state and of the action given by the actor nn
+
 
 # Environment
  market env is essentially a time-series data-frame (RNNs work well with time-series data)
