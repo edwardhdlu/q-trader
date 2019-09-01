@@ -152,6 +152,8 @@ https://quantdare.com/deep-reinforcement-trading/
 
 [stable-baselines](https://stable-baselines.readthedocs.io/en/master/guide/quickstart.html)
 
+[https://github.com/notadamking/tensortrade/tree/master/tensortrade](https://github.com/notadamking/tensortrade/tree/master/tensortrade)
+
 [other python resources](https://github.com/topics/trading?l=python)
 
 
