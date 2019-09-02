@@ -1,6 +1,8 @@
 import time
 from datetime import datetime
 
+from typing import Tuple
+
 from ai_agent import Agent
 from utils import *
 import numpy as np
@@ -66,7 +68,7 @@ class Dqn:
         return  profit_vs_episode, trades_vs_episode, epsilon_vs_episode, model_name, agent.num_trains, agent.epsilon
 
 
-    def execute_action(self, action, close_price, t, total_profits, total_holds, total_buys, total_sells):
+    def execute_action(self, action, close_price, t, total_profits, total_holds, total_buys, total_sells)-> Tuple[float, float, int, int, int]:
 
         if action == 0:  # hold
             reward = 0
