@@ -84,7 +84,7 @@ class Dqn:
         elif action == 2 and len(self.open_orders) > 0:  # sell (or exiting trade)
 
             bought_price = self.open_orders.pop(0)
-            return_rate = close_price / bought_price
+            return_rate = close_price / bought_price#beterr -   see https://towardsdatascience.com/using-reinforcement-learning-to-trade-bitcoin-for-massive-profit-b69d0e8f583b
             log_return = np.log(return_rate)#for normal distribution
             total_profits += log_return
             reward = log_return#get_reward(return_rate, total_profits)

@@ -4,12 +4,25 @@ from https://finance.yahoo.com/quote/%5EGSPC?p=^GSPC
 or from https://www.kaggle.com/janiobachmann/s-p-500-time-series-forecasting-with-prophet/data
 
 
-# Policy netork (actor ai_agent.py)
-As illustrated in below figure, model DQN is a Policy network (aka actor cause it acts or give probability of best action
+# Value based network approach(actor ai_agent.py)
+we use value-based RL (  ddpg algo. has also a  Policy netork model ) - the goal of the agent is to optimize the value function V(s) which is defined as a function that tells us the maximum expected future reward the agent shall get at each state.
+The value of each state is the total amount of the reward an RL agent can expect to collect over the future, from a particular state.
+we use TD (Temporal Difference) method to calculate value (probability of action) base on current and next state: 
+TD In plain English, 
+ means maximum future reward for this state and action (s,a) 
+is the immediate reward r plus maximum future reward for the next state
+                 
+![max future reward](https://github.com/loliksamuel/py-ML-rl-trade/blob/master/files/output/max_future_reward.png)
+
+the model get updated every few days.
+
+
+As illustrated in below figure
+The agent will use the  above value function to select which state to choose at each step. The agent will always take the state with the biggest value.
 model input :
  1. historical stock data 
  2. historicsl market data 
- 3. investment status, and reward 
+ 3. investment status, and reward and value function
  
 model output(action prediction):
 1. hold
@@ -20,8 +33,7 @@ model output(action prediction):
 ![nn](https://github.com/loliksamuel/py-ML-rl-trade/blob/master/files/output/nn.png)
 
 
-# Value network (critic)
-in ddpg it has also a value a model (aka  critic's nn, it's output is the estimated Q-value of the current state and of the action given by the actor nn
+
 
 
 # Environment
@@ -76,15 +88,7 @@ epsilon_min, used to let the agent  explore a minimum percent of randomness
 epsilon_decay- used to decrease the number of explorations as it gets good at trading.
 
 
-# Value
-we use TD (Tempoal Difference) method to calculate value (probability of action): 
-TD In plain English, 
- means maximum future reward for this state and action (s,a) 
-is the immediate reward r plus maximum future reward for the next state
-                 
-![max future reward](https://github.com/loliksamuel/py-ML-rl-trade/blob/master/files/output/max_future_reward.png)
 
-the model get updated every few days.
 
 # How to Run
 
@@ -153,6 +157,8 @@ https://quantdare.com/deep-reinforcement-trading/
 [stable-baselines](https://stable-baselines.readthedocs.io/en/master/guide/quickstart.html)
 
 [https://github.com/notadamking/tensortrade/tree/master/tensortrade](https://github.com/notadamking/tensortrade/tree/master/tensortrade)
+
+[introduction-to-reinforcement-learning](https://medium.com/free-code-camp/a-brief-introduction-to-reinforcement-learning-7799af5840db)
 
 [other python resources](https://github.com/topics/trading?l=python)
 
