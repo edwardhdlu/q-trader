@@ -41,10 +41,18 @@ class Dqn:
 
                 next_state = self.get_state(data, t + 1, num_features)
 
-                if len(self.open_orders) > 0:  # if long add next state return as reward
+                #if len(self.open_orders) > 0:  # if long add next state return as reward
+                #print(action, agent.actions[action])
+                if agent.actions[action] == 'buy':
                     immediate_reward = next_state[0][-1]
-                    #print("Immediate reward:{0} Reward:{1} Time:{2} Price:{3}".format(immediate_reward, reward, t, data[t]))
-                    reward = reward + immediate_reward
+                elif agent.actions[action] == 'sell':
+                    immediate_reward = -next_state[0][-1]
+                else:
+                    immediate_reward = 0
+                #print("Immediate reward:{0:.5f} Reward:{1:.5f} Time:{2} Price:{3} Action:{4}".
+                #      format(immediate_reward, reward, t, data[t], agent.actions[action]))
+                #reward = reward + immediate_reward
+                reward = immediate_reward
 
 
                 #print(f'row #{t} {agent.actions[action]} @{data[t]}, state1={state}, state2={next_state}, reward={reward}')
@@ -54,6 +62,10 @@ class Dqn:
                 state = next_state
 
                 if done:
+                    # sell position at end of episode
+                    reward, total_profits, total_holds, total_buys, total_sells, total_notvalid = \
+                        self.execute_action(2, data[t+1], t+1, total_profits, total_holds, total_buys, total_sells,
+                                            total_notvalid)
                     eps = np.round(agent.epsilon, 3)
                     print(f'Episode {episode}/{episodes} Total Profit: {formatPrice(total_profits*100)},'
                           f' Total hold/buy/sell/notvalid trades: {total_holds} / {total_buys} / {total_sells} / {total_notvalid},'
@@ -85,7 +97,7 @@ class Dqn:
             self.open_orders.append(close_price)
             total_buys += 1
             reward = 0
-            #print(f'row #{t} Buy  @ ' + formatPrice(close_price))
+            print(f'row #{t} buy  @ ' + formatPrice(close_price))
 
         elif action == 2 and len(self.open_orders) > 0:  # sell (or exiting trade)
 
@@ -96,7 +108,7 @@ class Dqn:
             total_profits += log_return
             reward = log_return  # get_reward(return_rate, total_profits)
             total_sells += 1
-            #print(f'row #{t} sell @ ' + formatPrice(close_price) + " | return_rate: " + formatPrice(reward))
+            print(f'row #{t} sell @ ' + formatPrice(close_price) + " | return_rate: " + formatPrice(reward))
         else:
             reward = 0
             total_notvalid += 1

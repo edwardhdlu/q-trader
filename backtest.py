@@ -31,14 +31,18 @@ def bt(num_features, use_existing_model, model_name):
         state = next_state
 
         if done:
+            # sell position at end of episode
+            reward, total_profits, total_holds, total_buys, total_sells, total_notvalid = \
+                dqn.execute_action(2, data[t+1], t+1, total_profits, total_holds, total_buys, total_sells,
+                                   total_notvalid)
             print("-----------------------------------------")
             print(f'Total Profit: {formatPrice(total_profits*100)} ,'
                   f' Total hold/buy/sell/notvalid trades: {total_holds} / {total_buys} / {total_sells} / {total_notvalid}')
             print("-----------------------------------------")
 
 
-stock_name = 'test'  # GSPC_2011 GSPC_2019 GSPC_1970_2019 GSPC_1970_2018
-model_name = 'model_ep200'  # model_ep0, model_ep10, model_ep20, model_ep30
+stock_name = 'test_sinus'  # GSPC_2011 GSPC_2019 GSPC_1970_2019 GSPC_1970_2018
+model_name = 'model_ep5000'  # model_ep0, model_ep10, model_ep20, model_ep30
 model_inst = load_model("files/output/" + model_name)
 num_features = model_inst.layers[0].input.shape.as_list()[1]
 use_existing_model = True

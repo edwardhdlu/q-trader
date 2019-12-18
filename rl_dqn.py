@@ -12,12 +12,12 @@ np.set_printoptions(precision=4)
 np.set_printoptions(suppress=True)  # prevent numpy exponential #notation on print, default False
 
 # change these params
-stock_name = 'test'  # ^GSPC_2001_2010  ^GSPC_1970_2018  ^GSPC_2011
+stock_name = 'test_sinus'  # ^GSPC_2001_2010  ^GSPC_1970_2018  ^GSPC_2011
 num_features = 8  # (int) > 0
 num_neurons = 64  # (int) > 0
-episodes = 200  # (int) > 0 ,minimum 200 episodes for results. episode represent trade and learn on all data.
+episodes = 5000  # (int) > 0 ,minimum 200 episodes for results. episode represent trade and learn on all data.
 batch_size = 8  # (int) > 0 size of a batched sampled from replay buffer for training
-random_action_decay = 0.9999  # (float) 0-1
+random_action_decay = 0.99999  # (float) 0-1
 future_reward_importance = 0.95  # (float) 0-1 aka decay or discount rate, determines the importance of future rewards
 # If=0 then agent will only learn to consider current rewards. if=1 it will make it strive for a long-term high reward.
 random_action_min = 0.05  # (float) 0-1

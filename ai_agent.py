@@ -15,7 +15,7 @@ class Agent:
         self.memory = deque(maxlen=100000)
         self.model_name = model_name
         self.use_existing_model = use_existing_model
-        self.actions = ['hold', 'buy ', 'sell']
+        self.actions = ['hold', 'buy', 'sell']
         self.action_size = len(self.actions)
         self.gamma = future_reward_importance  # discount rate, determines the importance of future rewards.
         # gamma=0 agent learns to consider current rewards, =1 strives for a long-term high reward
