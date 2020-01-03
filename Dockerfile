@@ -1,5 +1,5 @@
-#FROM python:3.7-alpine3.10
-FROM continuumio/anaconda
+FROM python:3.7-alpine3.10
+#FROM continuumio/anaconda
 
 ADD ./requirements.txt /code/
 
