@@ -16,8 +16,8 @@ if [[ -n $2 ]]; then
     docker build \
         --tag 'trader-rl-postgres' \
         --build-arg ID=$(id -u) \
-        --build-arg GI=$(id -g) \
-        -f "$CWD/docker/Dockerfile.backend" "$CWD"
+        --build-arg GI=$(id -g)
+        #-f "$CWD/docker/Dockerfile.backend" "$CWD"
 
 
     docker run \
@@ -48,10 +48,10 @@ fi
 
 if [ $GPU == 0 ]; then
     N="trader-rl-cpu"
-    docker build --tag $N -f "$CWD/docker/Dockerfile.cpu" "$CWD"
+    docker build --tag $N #-f "$CWD/docker/Dockerfile.cpu" "$CWD"
 else
     N="trader-rl-gpu"
-    docker build --tag $N -f "$CWD/docker/Dockerfile.gpu" "$CWD"
+    docker build --tag $N #-f "$CWD/docker/Dockerfile.gpu" "$CWD"
 fi
 
 echo "CWD: $CWD - Procs: $CPU_LIMIT Memory: ${MEM_LIMIT}bytes"
