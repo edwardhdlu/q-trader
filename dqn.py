@@ -97,7 +97,7 @@ class Dqn:
             self.open_orders.append(close_price)
             total_buys += 1
             reward = 0
-            print(f'row #{t} buy  @ ' + formatPrice(close_price))
+            #print(f'row #{t} buy  @ ' + formatPrice(close_price))
 
         elif action == 2 and len(self.open_orders) > 0:  # sell (or exiting trade)
 
@@ -108,7 +108,7 @@ class Dqn:
             total_profits += log_return
             reward = log_return  # get_reward(return_rate, total_profits)
             total_sells += 1
-            print(f'row #{t} sell @ ' + formatPrice(close_price) + " | return_rate: " + formatPrice(reward))
+            #print(f'row #{t} sell @ ' + formatPrice(close_price) + " | return_rate: " + formatPrice(reward))
         else:
             reward = 0
             total_notvalid += 1
