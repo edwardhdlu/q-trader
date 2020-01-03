@@ -108,6 +108,9 @@ epsilon_decay- used to decrease the number of explorations as it gets good at tr
 	- on all data (not just 2011) 
 	- with GPU  https://www.paperspace.com 
 ```
+python3 -m venv .
+pip freeze > requirements.txt
+pip install -r requirements.txt
 python rl_dqn.py
 ```
 
