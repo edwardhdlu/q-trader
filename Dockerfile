@@ -1,4 +1,4 @@
-FROM python:3.7-alpine3.10
+FROM tensorflow/tensorflow:latest-py3-jupyter
 
 MAINTAINER lolik samuel
 
@@ -10,6 +10,10 @@ WORKDIR /app
 
 #RUN conda install pip
 
+# RUN pip install --upgrade pip \
+#  && pip install -r requirements.txt
+
 RUN pip install -r requirements.txt
 
 CMD [ "python", "./rl_dqn.py" ]
+
