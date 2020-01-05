@@ -1,8 +1,8 @@
-FROM tensorflow/tensorflow:latest-py3
+FROM tensorflow/tensorflow:latest-py3-jupyter
 
 MAINTAINER lolik samuel
 
-ADD ./requirements.txt /app/
+#ADD ./requirements.txt /app/
 
 WORKDIR /app
 
@@ -28,6 +28,10 @@ RUN apt-get update \
 #         pycurl==7.43.0.3
 #         xlwings==0.16.3
 
+COPY *.py /app/
+COPY files /app/files
+
+#docker run -it <image_id> /bin/bash
 RUN pip install -r requirements.txt
 
 CMD [ "python", "./rl_dqn.py" ]
