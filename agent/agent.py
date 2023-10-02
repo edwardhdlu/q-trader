@@ -23,7 +23,7 @@ class Agent:
 		self.epsilon_min = 0.01
 		self.epsilon_decay = 0.995
 
-		self.model=load_model("models/"+model_name) if not is_eval else self._model()
+		self.model=load_model("models/"+model_name) if is_eval else self._model()
 		# if not is_eval and path.exists("models/model_ep40"):
 		# 	self.model=load_model("models/model_ep40")
 		# elif is_eval:
