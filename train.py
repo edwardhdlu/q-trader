@@ -2,11 +2,11 @@ from agent.agent import Agent
 from functions import *
 import sys
 
-if len(sys.argv) != 5:
+if len(sys.argv) != 4:
 	print( "Usage: python train.py [stock] [window] [episodes]")
 	exit()
 
-stock_name, window_size, episode_start, episode_count = sys.argv[1], int(sys.argv[2]), int(sys.argv[3]), int(sys.argv[4])
+stock_name, window_size, episode_count = sys.argv[1], int(sys.argv[2]), int(sys.argv[3])
 
 agent = Agent(window_size)
 data = getStockDataVec(stock_name)
@@ -15,7 +15,7 @@ l = len(data) - 1 # len(data) : 2515
 batch_size = 32
 print( f"Number of Data  : {l}" )
 
-for e in range(episode_start, episode_count + 1):
+for e in range(episode_count + 1):
 	print( "Episode " + str(e) + "/" + str(episode_count))
 	state = getState(data, 0, window_size + 1)
 
