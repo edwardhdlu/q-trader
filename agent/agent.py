@@ -2,7 +2,10 @@ import keras
 from keras.models import Sequential
 from keras.models import load_model
 from keras.layers import Dense
-from keras.optimizers import Adam
+try:
+    from keras.optimizers import Adam
+except ImportError:
+    from tensorflow.keras.optimizers import Adam
 
 from os import path
 import numpy as np
