@@ -1,17 +1,17 @@
 import keras
 from keras.models import load_model
 
-from agent.agent import Agent
+from agent.agent2 import Agent
 from functions import *
 import sys
 
-if len(sys.argv) != 3:
-	print ("Usage: python evaluate.py [stock] [model]")
+if len(sys.argv) != 4:
+	print ("Usage: python evaluate.py [stock] [model] [window_size]")
 	exit()
 
-stock_name, model_name = sys.argv[1], sys.argv[2]
-model = load_model("models/" + model_name)
-window_size = model.layers[0].input.shape.as_list()[1]
+stock_name, model_name, window_size = sys.argv[1], sys.argv[2], int(sys.argv[3])
+#model = load_model("models/" + model_name)
+#window_size = model.layers[0].input.shape.as_list()[1]
 
 try:
 	agent = Agent(window_size, True, model_name)
