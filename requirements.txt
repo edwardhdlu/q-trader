@@ -1,0 +1,7 @@
+torchvision
+torch
+PIL
+h5py
+pandas
+numpy
+matplotlib
