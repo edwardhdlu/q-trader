@@ -19,7 +19,7 @@ print( f"Number of Data  : {l}" )
 
 for e in range(episode_count + 1):
 	print( "Episode " + str(e) + "/" + str(episode_count))
-	state = getState(data, 0, window_size + 1)
+	state = getState(data, 0, window_size + 1) #[[0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5]]
 
 	total_profit = 0
 	agent.inventory = []
@@ -27,7 +27,7 @@ for e in range(episode_count + 1):
 
 	for t in range(l): #[0,2514/2)
 		print(f"#{t} ")
-		action = agent.act(state)
+		action = agent.act(state) #[[0.3323, 0.3001, 0.3677]]
 
 		# sit
 		next_state = getState(data, t + 1, window_size + 1)
@@ -55,8 +55,9 @@ for e in range(episode_count + 1):
 
 		if len(agent.memory) > batch_size:
 			agent.expReplay(batch_size)
-	if (e+1) % agent.target_update_period == 0:
-		agent.update_target()
 
-	if (e+1) % 5 == 0:
-		agent.save(e)
+		if (t+1) % agent.target_update_period == 0:
+			agent.update_target()
+
+	if (e+1) % 10 == 0:
+		agent.save(e+1)

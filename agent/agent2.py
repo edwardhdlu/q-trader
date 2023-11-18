@@ -36,7 +36,7 @@ class Agent:
         self.epsilon = 1.0
         self.epsilon_min = 0.01
         self.epsilon_decay = 0.995
-        self.target_update_period = 4
+        self.target_update_period = 100
 
         self.target_network = QNetwork(self.state_size, self.action_size)
         self.online_network = QNetwork(self.state_size, self.action_size)
