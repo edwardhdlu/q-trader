@@ -1,3 +1,22 @@
+# Run cmd 
+- run numeral data only (Agent using agent.agent2)
+  - `python train.py A069500_TRAIN {win} {ep}`
+  - `python train.py A122630_TRAIN {win} {ep}`
+  - `python train.py A229200_TRAIN {win} {ep}`
+  - `python train.py A233740_TRAIN {win} {ep}`
+- run numeral+image data (Agent using agent.agent_fusion)
+  - 이미지 사이즈가 고정되어 있어서, 현재 win은 180 가능(매 1분식 과거 3시간 이미지 관찰)
+  - 60, 10 추가 예정 (데이터 생성 진행중)
+    - `python train_w_img.py A069500_TRAIN {win} {ep}`
+    - `python train_w_img.py A122630_TRAIN {win} {ep}`
+    - `python train_w_img.py A229200_TRAIN {win} {ep}`
+    - `python train_w_img.py A233740_TRAIN {win} {ep}`
+- tensor_file_generate
+  - `cd ~/dq-stock-trader; nohup python generate_tensor.py A069500_TRAIN {win} {ep}`
+  - `cd ~/dq-stock-trader; nohup python generate_tensor.py A122630_TRAIN {win} {ep}`
+  - `cd ~/dq-stock-trader; nohup python generate_tensor.py A229200_TRAIN {win} {ep}`
+  - `cd ~/dq-stock-trader; nohup python generate_tensor.py A233740_TRAIN {win} {ep}`
+
 # Q-Trader
 
 An implementation of Q-learning applied to (short-term) stock trading. The model uses n-day windows of closing prices to determine if the best action to take at a given time is to buy, sell or sit.
