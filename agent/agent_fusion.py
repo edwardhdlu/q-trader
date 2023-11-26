@@ -123,11 +123,11 @@ class Agent:
         )
 
     def load(self):
-        self.online_network.load_state_dict(
-            torch.load(
-                f"{DataPath}/models/{self.stock_name}/{self.stock_name}_model_ep" + str(self.model_name) + ".pt"
-            )
+        state_dict = torch.load(
+            f"{DataPath}/models/{self.stock_name}/{self.stock_name}_model_ep" + str(self.model_name) + ".pt"
         )
+        self.target_network.load_state_dict(state_dict)
+        self.online_network.load_state_dict(state_dict)
 
     def act(self, num_state, img_state):
         if not self.is_eval and np.random.rand() <= self.epsilon:
