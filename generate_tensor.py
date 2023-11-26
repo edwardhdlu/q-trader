@@ -52,4 +52,10 @@ cd ~/dq-stock-trader; nohup python generate_tensor.py A069500_TRAIN 180 10
 cd ~/dq-stock-trader; nohup python generate_tensor.py A122630_TRAIN 180 10
 cd ~/dq-stock-trader; nohup python generate_tensor.py A229200_TRAIN 180 10
 cd ~/dq-stock-trader; nohup python generate_tensor.py A233740_TRAIN 180 10
+
+
+cd ~/dq-stock-trader; nohup python generate_tensor.py A069500_TEST 180 10
+cd ~/dq-stock-trader; nohup python generate_tensor.py A122630_TEST 180 10
+cd ~/dq-stock-trader; nohup python generate_tensor.py A229200_TEST 180 10
+cd ~/dq-stock-trader; nohup python generate_tensor.py A233740_TEST 180 10
 """

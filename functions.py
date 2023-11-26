@@ -2,10 +2,16 @@ import os
 import numpy as np
 import pandas as pd
 import math
+import h5py
 import torch
 from torchvision import transforms, io
 from PIL import Image
 from datetime import datetime
+
+from functools import lru_cache
+
+
+DataPath = os.environ.get("DataPath", "/content/drive/MyDrive/dfmba_img_rl_trading")
 
 # prints formatted price
 def formatPrice(n):
@@ -51,33 +57,38 @@ def list_files_in_directory(directory):
 
 
 # instead of getStockDataVec
-def getStockData(stock_name, window):
-
+@lru_cache(maxsize=None)
+def getStockData(stock_name, window, datamode=None):
 	assert window in [180], "window size must be in [180]"
+	if datamode == "hdf":
+		print("in datamode hdf, window is fixed to 180")
+		filename = f"{DataPath}/data/{stock_name}.h5"
+		file = h5py.File(filename, 'r')
+		return file, file.keys()
+	else:
+		df = pd.read_csv(f"data/{stock_name}.csv")
+		df.set_index("date", inplace=True)
+		df.index = pd.to_datetime(df.index)
 
-	df = pd.read_csv(f"data/{stock_name}.csv")
-	df.set_index("date", inplace=True)
-	df.index = pd.to_datetime(df.index)
+		if "train" in stock_name.lower():
+			stock_name = stock_name.split("_")[0]
+			img_files = list_files_in_directory(
+				f"data/{window}/{stock_name}/train"
+			)
+		elif "test" in stock_name.lower():
+			stock_name = stock_name.split("_")[0]
+			img_files = list_files_in_directory(
+				f"data/{window}/{stock_name}/test"
+			)
+		img_files = sorted(img_files) # 시간순으로 정렬
 
-	if "train" in stock_name.lower():
-		stock_name = stock_name.split("_")[0]
-		img_files = list_files_in_directory(
-			f"data/{window}/{stock_name}/train"
-		)
-	elif "test" in stock_name.lower():
-		stock_name = stock_name.split("_")[0]
-		img_files = list_files_in_directory(
-			f"data/{window}/{stock_name}/test"
-		)
-	img_files = sorted(img_files) # 시간순으로 정렬
-
-	return df[
-		['Close', 'Open', 'Low', 'High', 'Volume', 'AdjClose']
-	], img_files
+		return df[
+			['Close', 'Open', 'Low', 'High', 'Volume', 'AdjClose']
+		], img_files
 
 
 # instead of getState
-def getStateV2(num_df, f_list, t, buy_after):
+def getStateV2(num_df, f_list, t, buy_after, *args, **kwargs):
 	def _load_num_state(start, end):
 		# 이미지에 들어가는 값과 동일하게 하기 위해 인덱싱 사용
 		# block = num_df[d:t + 1] if d >= 0 else -d * [data[0]] + data[0:t + 1]  # pad with t0
@@ -112,4 +123,25 @@ def getStateV2(num_df, f_list, t, buy_after):
 			num_df.index[-1],
 			"Close"
 		]
+	return num_state, img_state, price
+
+
+DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+
+def getStateHDF(file_hdf, f_list, t=None, *args, **kwargs):
+	num_state = torch.tensor(
+		file_hdf[f"{t}/num"][:], dtype=torch.float
+	)
+	img_state  = torch.tensor(
+		file_hdf[f"{t}/img"][:], dtype=torch.float
+	)
+	price = torch.tensor(
+		file_hdf[f"{t}/p"][()], dtype=torch.float
+	)
+
+	if DEVICE != "cpu":
+		num_state = num_state.to(DEVICE)
+		img_state = img_state.to(DEVICE)
+		price = price.to(DEVICE)
 	return num_state, img_state, price
