@@ -6,8 +6,8 @@ from os import path
 import numpy as np
 import random
 from collections import deque
+from functions import *
 
-DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 class QNetwork(torch.nn.Module):
     def __init__(self, state_size, action_size):
@@ -86,11 +86,12 @@ class QNetwork(torch.nn.Module):
 
 
 class Agent:
-    def __init__(self, state_size, is_eval=False, model_name=""):
+    def __init__(self, state_size, is_eval=False, stock_name="", model_name=""):
         self.state_size = state_size  # normalized previous days
         self.action_size = 3  # sit, buy, sell
         self.memory = deque(maxlen=10000)
         self.inventory = []
+        self.stock_name = stock_name
         self.model_name = model_name
         self.is_eval = is_eval
 
@@ -103,8 +104,11 @@ class Agent:
         self.target_network = QNetwork(self.state_size, self.action_size)
         self.online_network = QNetwork(self.state_size, self.action_size)
 
-        if is_eval:
+        if model_name != 0:
             self.load()
+
+        if is_eval:
+            assert model_name != "", "model_name should be given in eval mode"
             self.online_network.eval()
 
         self.optimizer = torch.optim.Adam(self.online_network.parameters(), lr=0.0005)
@@ -113,10 +117,17 @@ class Agent:
         folder = f"models/{stock_name}"
         if not os.path.exists(folder):
             os.makedirs(folder, exist_ok=True)
-        torch.save(self.target_network.state_dict(), f"models/{stock_name}/{stock_name}_model_ep" + str(e) + ".pt")
+        torch.save(
+            self.target_network.state_dict(),
+            f"{DataPath}/models/{stock_name}/{stock_name}_model_ep" + str(e) + ".pt"
+        )
 
     def load(self):
-        self.online_network.load_state_dict(torch.load("models/" + self.model_name + ".pt"))
+        self.online_network.load_state_dict(
+            torch.load(
+                f"{DataPath}/models/{self.stock_name}/{self.stock_name}_model_ep" + str(self.model_name) + ".pt"
+            )
+        )
 
     def act(self, num_state, img_state):
         if not self.is_eval and np.random.rand() <= self.epsilon:

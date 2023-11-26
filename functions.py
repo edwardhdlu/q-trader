@@ -10,8 +10,21 @@ from datetime import datetime
 
 from functools import lru_cache
 
-
 DataPath = os.environ.get("DataPath", "/content/drive/MyDrive/dfmba_img_rl_trading")
+if not os.path.exists(DataPath):
+	DataPath = "/locdisk/data/hoseung2"
+
+print(f"DataPath: {DataPath}")
+
+
+def get_data_path(stock_name, ext_="h5"):
+	if "locdisk" in DataPath:
+		return f"{DataPath}/{stock_name}.{ext_}"
+	elif "MyDrive" in DataPath:
+		return f"{DataPath}/data/{stock_name}.{ext_}"
+	else:
+		raise ValueError("DataPath not found")
+
 
 # prints formatted price
 def formatPrice(n):
@@ -56,17 +69,20 @@ def list_files_in_directory(directory):
 	return file_list
 
 
+
 # instead of getStockDataVec
 @lru_cache(maxsize=None)
 def getStockData(stock_name, window, datamode=None):
 	assert window in [180], "window size must be in [180]"
 	if datamode == "hdf":
 		print("in datamode hdf, window is fixed to 180")
-		filename = f"{DataPath}/data/{stock_name}.h5"
+		filename = get_data_path(stock_name, ext_="h5")
 		file = h5py.File(filename, 'r')
 		return file, file.keys()
 	else:
-		df = pd.read_csv(f"data/{stock_name}.csv")
+		df = pd.read_csv(
+			get_data_path(stock_name, ext_="csv")
+		)
 		df.set_index("date", inplace=True)
 		df.index = pd.to_datetime(df.index)
 

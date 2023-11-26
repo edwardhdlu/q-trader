@@ -3,8 +3,8 @@ from functions import *
 import sys
 import time
 
-def run(stock_code, win, ep, datamode, batch_size):
-	agent = Agent(win)
+def run(stock_code, win, ep, datamode, batch_size, ep_from=0):
+	agent = Agent(win, is_eval=False, stock_name=stock_code, model_name=ep_from)
 	state_func = getStateHDF if datamode == "hdf" else getStateV2
 
 	num_df, img_fs = getStockData(stock_code, win, datamode)
@@ -16,7 +16,7 @@ def run(stock_code, win, ep, datamode, batch_size):
 	print(f"Description  : dqn torch implementation ")
 	print(f"Number of Data  : {l}")
 
-	for e in range(ep + 1):
+	for e in range(ep_from, ep - ep_from+ 1):
 		print("Episode " + str(e) + "/" + str(ep))
 		num_state, img_state, price = state_func(
 			num_df, img_fs, 0, buy_after=win + 1
@@ -61,9 +61,9 @@ def run(stock_code, win, ep, datamode, batch_size):
 				print("--------------------------------")
 				break
 
-			if len(agent.memory) > batch_size:
+			if len(agent.memory) % (batch_size // 2) == 0:
 				agent.expReplay(batch_size)
-				agent.memory.clear() # hmm...
+				# agent.memory.clear() # hmm...
 		if (e + 1) % agent.target_update_period == 0:
 			agent.update_target()
 
@@ -78,5 +78,6 @@ if __name__ == "__main__":
 
 	stock, win, ep, datamode = sys.argv[1], int(sys.argv[2]), int(sys.argv[3]), sys.argv[4]
 	batch_size = int(sys.argv[5])
-	print(stock, win, ep, datamode, batch_size)
-	run(stock, win, ep, datamode, batch_size)
+	ep_load = int(sys.argv[6])
+	print(stock, win, ep, datamode, batch_size, ep_load)
+	run(stock, win, ep, datamode, batch_size, ep_load)
